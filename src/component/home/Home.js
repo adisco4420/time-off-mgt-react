@@ -13,6 +13,19 @@ class Home extends Component {
                     <a class="btn btn-primary btn-lg" href="#" role="button">Sign Up</a>
                 </p>
             </div>
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <h3>col-4</h3>
+                    </div>
+                    <div class="col-4">
+                        <h3>col-4</h3>
+                    </div>
+                    <div class="col-4">
+                         <h3>col-4</h3>
+                    </div>
+                </div>
+            </div>
         </div>
         )
     }
