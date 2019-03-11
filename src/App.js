@@ -5,13 +5,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './component/header/Header';
 import Home from './component/home/Home';
 import Footer from './component/footer/Footer'
+
+import { BrowserRouter ,Route, Switch,Link } from 'react-router-dom'
+import Login from './component/auth/login/Login';
+import Register from './component/auth/register/Register';
 class App extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <Home />
-        <Footer />
+    <BrowserRouter>
+        <div>
+          
+             <Header />
+         
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/register" component={Register} />
+          </Switch> 
+          <Footer />
+        </div>
+     </BrowserRouter>
 
       </div>
     );

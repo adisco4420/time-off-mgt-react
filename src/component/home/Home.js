@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
 import './HomeStyle.css'
 class Home extends Component { 
@@ -8,48 +9,57 @@ class Home extends Component {
               <div className="jumbotron">
                 <h1 className="display-4 pull-left">Time Off Management</h1>
                     <div className="float-right mr-3"> 
-                        <span className="fa fa-calendar fa-5x" ></span>
+                        {/* <img width="100px" alt="clock-time" src="https://st4.depositphotos.com/4323461/20704/v/1600/depositphotos_207042472-stock-illustration-man-wants-to-stop-the.jpg" />
+                        <span className="fa fa-calendar fa-5x" ></span> */}
                     </div>
-                <h1 className="lead mt-lead">Open source, simple yet powerful absence management software for small and medium size business.</h1>
+                <h1 className="lead mt-lead">Request  Leave For Different Purpose Such As Maternity Leave, Vacation , Medical Care etc.</h1>
                 <hr className="my-4" />
-                <p>Endorsed by hundreds of software developers..</p>
+                <p>Tested And Trusted Time Off Application</p>
                 <p className="lead">
-                    <a className="btn btn-primary btn-lg" href="#" role="button">Sign Up</a>
+                    <Link className="btn btn-primary btn-lg" to="/register">Sign Up</Link>
+
                 </p>
             </div>
-            <div className="container">    
-                <h2 className="text-primary text-center mb-5">Simple Employees Absence Management</h2>
-                <div className="row text-center">
+            <div className="container mb-10">    
+                <h2 className="text-primary text-center mb-5">Reasons To Take Leave</h2>
+                <div className="row text-center features">
                 
                     <div className="col-4">
-                    <span className="fa fa-server fa-5x"></span>
-                        <h5 className="mt-3">Use within own infrastructure</h5>
-                        <p>Host application within your own infrastructure</p>
-                        <p className="mt-4">
-                            As an open source software TimeOff.Management 
-                            could be deployed into customer server without any enquires, 
-                            not even email is needed!
-                        </p>
-                      
+                        <img alt="vacation"
+                            src='https://i.imgur.com/OxYt7e0.png' />
+                        <h5 className="mt-3">Travel With Friend And Family</h5>
                     </div>
 
                     <div className="col-4">
-                    <span className="fa fa-cloud fa-5x"></span>
-                        <h5 className="mt-3">Host in a cloud</h5>
-                        <p>For as little as 0.50 USD per person per month! With 30 days trial.</p>
-                        <p className="mt-4">
-                            just create an account and start using the application. 
-                            We will issue PayPal invoice by the end of second month.
-                        </p>
+                   <img src="https://previews.123rf.com/images/emilystudio/emilystudio1705/emilystudio170500098/77924682-cartoon-pregnant-women.jpg" 
+                   alt="paternity" />
+                        <h5 className="mt-3">Paternity Leave</h5>
                      
                     </div>
                     <div className="col-4">
-                    <span className="fa fa-random fa-5x"></span>
-                        <h5 className="mt-3">Simple and flexible</h5>
-                        <p>Fits into your organisation's workflow rather than force you to adopt it!</p>
-                        <p className="mt-4">
-                            Automated account setup and very intuitive user interface.
-                        </p>
+                    <img alt="medicare"
+                            src='http://planmyhealth.in/Healthyblog/wp-content/uploads/2018/11/camp-4-500x500.png' />
+                        <h5 className="mt-3">Medical Checkup</h5>
+     
+                     
+                    </div>
+                    <div className="col-4">
+                    <img alt="medicare"
+                            src='https://i.imgur.com/1ctoTjX.png' />
+                        <h5 className="mt-3">Attend Meetups</h5>
+     
+                     
+                    </div>
+                    <div className="col-4">
+                    <img alt="medicare"
+                            src='https://images-na.ssl-images-amazon.com/images/I/61NWvT8vUoL._SX466_.jpg' />
+                        <h5 className="mt-3">Marriage Purpose</h5>                 
+                    </div>
+                    <div className="col-4">
+                    <img alt="medicare"
+                            src='https://previews.123rf.com/images/lenm/lenm1107/lenm110700267/9991433-illustration-of-friends-having-a-beach-party.jpg' />
+                        <h5 className="mt-3">Special Occassions</h5>
+     
                      
                     </div>
                 </div>
