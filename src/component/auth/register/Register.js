@@ -1,6 +1,7 @@
 import React from 'react';
 import './register.css'
 
+
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
@@ -24,6 +25,9 @@ const emailRegex = RegExp(
 class Register extends React.Component{
     constructor(props) {
         super(props);
+        this.errorSate = {
+          companyNameError: false
+        }
     
         this.state = {
           companyName: null,
@@ -31,6 +35,7 @@ class Register extends React.Component{
           lastName: null,
           email: null,
           password: null,
+          invaildError: false,
           formErrors: {
             companyName: '',
             firstName: "",
@@ -55,7 +60,11 @@ class Register extends React.Component{
           `);
           alert('registration successful')
         } else {
-          console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+          this.setState({invaildError: true})
+          // console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+          // console.log(this.state.companyName)
+          // console.log(this.state.formErrors.companyName.length === 0 && this.state.companyName === null);
+          // console.log(this.state)
         }
       };
     
@@ -107,22 +116,25 @@ class Register extends React.Component{
                     <label >Company Name</label>
                     <input type="text" className="form-control"  placeholder="Company Name" 
                           name="companyName"  noValidate onChange={this.handleChange}/>
-                      {formErrors.companyName.length > 0 && (
-                         <span className="text-danger">{formErrors.companyName}</span>
-              )}
+                    {this.state.invaildError && (this.state.companyName === null) ? 
+                    <p className="text-danger">* company name is required</p> : '' } 
+                    {(<span className="text-danger">{formErrors.companyName}</span>)}
                    </div>
                    <div className="form-group">
                     <label >First Name</label>
                     <input type="text" className="form-control"  placeholder="First Name" 
                           name="firstName"  noValidate onChange={this.handleChange}/>
+                        {this.state.invaildError && (this.state.firstName === null) ? 
+                    <p className="text-danger">* first name is required</p> : '' } 
                       {formErrors.firstName.length > 0 && (
-                         <span className="text-danger">{formErrors.firstName}</span>
-              )}
+                         <span className="text-danger">{formErrors.firstName}</span>)}
                    </div>
                    <div className="form-group">
                     <label >Last Name</label>
                     <input type="text" className="form-control"  placeholder="First Name" 
                           name="lastName"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.lastName === null) ? 
+                    <p className="text-danger">* last name is required</p> : '' } 
                       {formErrors.lastName.length > 0 && (
                          <span className="text-danger">{formErrors.lastName}</span>
               )}
@@ -131,6 +143,8 @@ class Register extends React.Component{
                     <label >Email address</label>
                     <input type="email" className="form-control"  placeholder="Enter email" 
                           name="email"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.email === null) ? 
+                    <p className="text-danger">* email is required</p> : '' } 
                       {formErrors.email.length > 0 && (
                          <span className="text-danger">{formErrors.email}</span>
               )}
@@ -141,6 +155,8 @@ class Register extends React.Component{
                                     name="password"
                                     noValidate
                                     onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.password === null) ? 
+                    <p className="text-danger">* password is required</p> : '' } 
                      {formErrors.password.length > 0 && (
                 <span className="text-danger">{formErrors.password}</span>
               )}
