@@ -28,6 +28,7 @@ class Login extends React.Component{
         this.state = {
           email: null,
           password: null,
+          invalidError : false,
           formErrors: {
             email: "",
             password: ""
@@ -46,7 +47,9 @@ class Login extends React.Component{
           `);
           alert('login successful')
         } else {
+          this.setState({invalidError: true})
           console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
+         
         }
       };
     
@@ -84,6 +87,8 @@ class Login extends React.Component{
                     <label >Email address</label>
                     <input type="email" className="form-control"  placeholder="Enter email" 
                           name="email"  noValidate onChange={this.handleChange}/>
+                    {this.state.invalidError && (this.state.email === null) ? 
+                    <p className="text-danger">* email is required</p> : '' }
                       {formErrors.email.length > 0 && (
                          <span className="text-danger">{formErrors.email}</span>
               )}
@@ -94,6 +99,8 @@ class Login extends React.Component{
                                     name="password"
                                     noValidate
                                     onChange={this.handleChange}/>
+                       {this.state.invalidError && (this.state.password === null) ? 
+                    <p className="text-danger">* password is required</p> : '' }
                      {formErrors.password.length > 0 && (
                 <span className="text-danger">{formErrors.password}</span>
               )}
