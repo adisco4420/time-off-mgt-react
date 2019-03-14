@@ -21,6 +21,11 @@ class Header extends Component {
                         TimeOff.Management <span className="sr-only">(current)</span>
                     </Link>
                 </li>
+                <li className="nav-item active ">
+                    <Link className="nav-link text-light" to="/employee-dashboard">
+                        Employee Dashboard <span className="sr-only">(current)</span>
+                    </Link>
+                </li>
 
                 </ul>
                 <ul className="navbar-nav ml-auto">
