@@ -16,3 +16,6 @@
 .second, .third{
     margin-right: 5%
 }
+.col-md-3 .react-calendar {
+    max-height: 340px !important;
+}

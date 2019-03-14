@@ -1,6 +1,5 @@
 import React , { Component } from 'react';
-import InfiniteCalendar from 'react-infinite-calendar';
-import 'react-infinite-calendar/styles.css';
+import Calendar from 'react-calendar';
 import './employee.css';
 
 // Render the Calendar
@@ -24,9 +23,26 @@ const allAbsence = [
 {type: 'Vacation', days: 3, startDate: '01/02/2019', stopDate: '04/02/2019', approvalBy: 'James Bond', status: 'Approved'},
 {type: 'Attend Meetup', days: 5, startDate: '11/03/2019', stopDate: '16/03/2019', approvalBy: 'Thomas Edison', status: 'Approved'},
 {type: 'Christmas Break', days: 4, startDate: '23/03/2018', stopDate: '27/02/2018', approvalBy: 'Mayowa', status: 'Approved'}
-
+]
+const calendarDate = [
+    new Date(2019 , 0, 9), new Date(2019, 1, 23), new Date(2018, 2, 25), new Date(2019, 3, 11)
+]
+const MoreCalendarDate = [
+    new Date(2019 , 0, 9), new Date(2019, 1, 23), new Date(2018, 2, 25), new Date(2019, 3, 11),
+    new Date(2019 , 4, 2), new Date(2019, 5, 13), new Date(2018, 6, 25), new Date(2019, 7, 21),
+    new Date(2019 , 8, 16), new Date(2019, 9, 8), new Date(2018, 10, 30), new Date(2019, 11, 24)
 ]
 class EmployeeDashboard extends Component {
+    state = {
+        showMore: false,
+        showMoreText: 'Show More'
+    }
+   handeleShowMore = () => {
+        this.setState({
+            showMore: !this.state.showMore,
+            showMoreText: 'Show Less'
+        })
+    }
     render(){
         return(
             <div>
@@ -99,39 +115,27 @@ class EmployeeDashboard extends Component {
                         </div>
 
                     </div>
-                    <h2 className="text-center mt-2 cla">Calendar</h2>
+                    <h2 className="text-center mt-4 mb-3 ">
+                    Calendar  <button onClick={this.handeleShowMore} className="btn btn-primary">{
+                        !this.state.showMore ? 'Show More' : 'Show Less'
+                    }</button> </h2>
                     <div className="row">
                    
-                        <div className="col-md-3 first">
-                        <InfiniteCalendar
-                                width={330}
-                                height={300}
-                                selected={new Date(2019, 0, 2)}
-                                disabledDays={[0, 1, 2, 4, 5,  6]}
-                                min={new Date(2019, 0, 1)} 
-                                max={new Date(2019, 0, 30)} 
-                            />,
-                        </div>
-                        <div className="col-md-3 ml-3 second">
-                        <InfiniteCalendar
-                        width={330}
-                        height={300}
-                        selected={new Date(2018, 11, 24)}
-                        min={new Date(2018, 11, 1)} 
-                        max={new Date(2018, 11, 30)} 
-                        disabledDays={[0, 3, 2, 4, 5,  6]}
-                    />,
-                        </div>
-                        <div className="col-md-3 third">
-                        <InfiniteCalendar
-                                width={330}
-                                height={300}
-                                selected={new Date(2019, 2, 11)}
-                                disabledDays={[0, 3, 2, 4, 5,  6]}
-                                min={new Date(2019, 2, 1)} 
-                                max={new Date(2019, 2, 30)} 
-                            />,
-                        </div>
+                    { !this.state.showMore ?
+                        calendarDate.map(item => {
+                            return <div className="col-md-3 ">
+                            <Calendar 
+                                value={item}
+                                />
+                            </div>  
+                        }) : MoreCalendarDate.map(item => {
+                            return <div className="col-md-3 mb-2">
+                            <Calendar
+                                value={item}
+                                />
+                            </div>  
+                        })
+                    }
       
 
                     </div>
