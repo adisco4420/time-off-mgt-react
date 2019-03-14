@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './component/header/Header';
 import Home from './component/home/Home';
 import Footer from './component/footer/Footer'
+import EmployeeDashboard from './component/dashboard/Employee-Dashboard'
 
 import { BrowserRouter ,Route, Switch,Link } from 'react-router-dom'
 import Login from './component/auth/login/Login';
@@ -22,6 +23,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/employee-dashboard" component={EmployeeDashboard} />
           </Switch> 
           <Footer />
         </div>
