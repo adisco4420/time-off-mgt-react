@@ -19,7 +19,6 @@ const emailRegex = RegExp(
     Object.values(rest).forEach(val => {
       val === null && (valid = false);
     });
-  
     return valid;
   };
 class Register extends React.Component{
@@ -85,9 +84,10 @@ class Register extends React.Component{
               : "";
             break;
           case "lastName":
-            formErrors.lastName =
-              value.length < 3 ? "minimum 3 characaters required" : "";
-            break;
+          formErrors.lastName =  value.length < 3 || !onlyLetterRegex.test(value)
+          ? "last name must be up to 3 characters (alphabet only)"
+          : "";
+          break;
           case "email":
             formErrors.email = emailRegex.test(value)
               ? ""
@@ -131,7 +131,7 @@ class Register extends React.Component{
                    </div>
                    <div className="form-group">
                     <label >Last Name</label>
-                    <input type="text" className="form-control"  placeholder="First Name" 
+                    <input type="text" className="form-control"  placeholder="Last Name" 
                           name="lastName"  noValidate onChange={this.handleChange}/>
                     {this.state.invaildError && (this.state.lastName === null) ? 
                     <p className="text-danger">* last name is required</p> : '' } 
