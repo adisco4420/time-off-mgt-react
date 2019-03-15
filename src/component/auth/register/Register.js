@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 import './register.css'
 
 
@@ -179,7 +180,11 @@ class Register extends React.Component{
                         <option>India/New Delhi</option>
                     </select>
                     </div>
-                <button type="submit" className="btn btn-primary">Register</button>
+                <button type="submit" className="btn btn-primary">
+                { formValid(this.state) ? <Link to="/login"></Link> :
+                  'Register'
+                }
+                </button>
                     </div>
                 </form>
             </div>

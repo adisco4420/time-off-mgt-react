@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import './login.css'
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
-  const onlyLetterRegex = RegExp(/^[A-Za-z]+$/)
   
   const formValid = ({ formErrors, ...rest }) => {
     let valid = true;
@@ -40,15 +40,19 @@ class Login extends React.Component{
         e.preventDefault();
     
         if (formValid(this.state)) {
-          console.log(`
-            --SUBMITTING--
-            Email: ${this.state.email}
-            Password: ${this.state.password}
-          `);
+          // console.log(`
+          //   --SUBMITTING--
+          //   Email: ${this.state.email}
+          //   Password: ${this.state.password}
+          // `);
+          let user = {email: this.state.email, password: this.state.password}
+          user = JSON.stringify(user)
+          console.log(user)
+          localStorage.setItem('currentUser', user)
           alert('login successful')
+
         } else {
           this.setState({invalidError: true})
-          console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
          
         }
       };
@@ -105,7 +109,14 @@ class Login extends React.Component{
                 <span className="text-danger">{formErrors.password}</span>
               )}
                 </div>
-                <button type="submit" className="btn btn-primary">Login</button>
+            
+                  { formValid(this.state) ?    
+                  <button onClick={this.handleSubmit} type="button" className="btn btn-primary text-light">
+                       <Link  className="text-light" to="/employee-dashboard">Login</Link>
+                  </button>
+                  :    <button type="submit" className="btn btn-primary text-light">Login</button>
+                  }
+            
                     </div>
                 </form>
             </div>

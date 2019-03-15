@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import './HeaderStyle.css';
 
-
-import './HeaderStyle.css'
 class Header extends Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            koloLogin: true,
+        }
+        console.log(this.state.koloLogin)
+    }
+
+ 
+    handleLogout = () => {
+        localStorage.clear('currentUser')
+        this.setState({koloLogin: !this.state.koloLogin})
+       console.log(this.state.koloLogin)
+    }
     
   render() {
       
@@ -26,17 +39,31 @@ class Header extends Component {
                         Employee Dashboard <span className="sr-only">(current)</span>
                     </Link>
                 </li>
-
-                </ul>
-                <ul className="navbar-nav ml-auto">
-                <li className="nav-item mr-3">
-                    {/* <a className="nav-link text-light" href="#">Login</a> */}
-                    <Link className="nav-link text-light" to="/login" >Login </Link>
-                </li>
-                <li className="nav-item ml-3">
-                    <Link className="nav-link btn btn-outline-light text-light" to="/register">Sign Up</Link>
+                <li className="nav-item active ">
+                    <Link className="nav-link bg-light text-primary" to="/new-absence">
+                        New Absence <span className="sr-only">(current)</span>
+                    </Link>
                 </li>
                 </ul>
+                {
+                    !this.state.koloLogin ? 
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item mr-3">
+                        <Link className="nav-link text-light" to="/login" >Login </Link>
+                        </li>
+                        <li className="nav-item ml-3">
+                            <Link className="nav-link btn btn-outline-light text-light" to="/register">Sign Up</Link>
+                        </li>
+                        </ul>
+                
+                     :    <ul className="navbar-nav ml-auto">
+                            <li className="nav-item ml-3" onClick={this.handleLogout}>
+                            <Link className="nav-link btn btn-outline-light text-light" to="/login">Logout</Link>
+                            </li>
+                        </ul>
+                }
+             
+               
 
             </div>
             </nav>

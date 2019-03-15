@@ -3,8 +3,6 @@ import Calendar from 'react-calendar';
 import './employee.css';
 
 // Render the Calendar
-var today = new Date();
-var lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
 const username = 'Sodiq Alabi';
 const typeOfTimeOff = [
     {name: 'Vacation', days: 2},
@@ -68,12 +66,12 @@ class EmployeeDashboard extends Component {
                         <div className="card">
                             <div className="card-header bg-primary text-light">Types Of TimeOff</div>
                             <div className="card-bod">
-                            <ul class="list-group"> 
+                            <ul className="list-group"> 
                                 {
-                                typeOfTimeOff.map(item => {
-                                        return <div>
-                                            <li class="list-group-item"> {item.name} 
-                                                <span class="badge badge-primary float-right ">{item.days}</span></li>
+                                typeOfTimeOff.map((item , index) => {
+                                        return <div key={index}>
+                                            <li  className="list-group-item"> {item.name} 
+                                                <span className="badge badge-primary float-right ">{item.days}</span></li>
                                             </div>
                                 })
                                 }
@@ -86,12 +84,12 @@ class EmployeeDashboard extends Component {
                         <div className="card">
                             <div className="card-header bg-primary text-light">Available Request</div>
                             <div className="card-bod">
-                            <ul class="list-group"> 
+                            <ul className="list-group"> 
                                 {
                                 requests.map(item => {
-                                        return <div>
-                                            <li class="list-group-item"> {item.name} 
-                                                <span class="badge badge-primary float-right ">{item.date}</span></li>
+                                        return <div key={item.date}>
+                                            <li className="list-group-item"> {item.name} 
+                                                <span className="badge badge-primary float-right ">{item.date}</span></li>
                                             </div>
                                 })
                                 }
@@ -122,14 +120,14 @@ class EmployeeDashboard extends Component {
                     <div className="row">
                    
                     { !this.state.showMore ?
-                        calendarDate.map(item => {
-                            return <div className="col-md-3 ">
+                        calendarDate.map((item, index) => {
+                            return <div key={index} className="col-md-3 ">
                             <Calendar 
                                 value={item}
                                 />
                             </div>  
-                        }) : MoreCalendarDate.map(item => {
-                            return <div className="col-md-3 mb-2">
+                        }) : MoreCalendarDate.map((item, index) => {
+                            return <div key={index} className="col-md-3 mb-2">
                             <Calendar
                                 value={item}
                                 />
@@ -144,7 +142,7 @@ class EmployeeDashboard extends Component {
                     <h3 className="text-center mt-3">All Absenses</h3>
                     <div className="row mb-5 py-3">
                         <div className="col-12">
-                        <table class="table table-hover">
+                        <table className="table table-hover">
                             <thead>
                             <tr>
                                 <th>Type</th>
@@ -157,8 +155,8 @@ class EmployeeDashboard extends Component {
                             <tbody>
                           
                                 {
-                                    allAbsence.map(item => {
-                                        return <tr>
+                                    allAbsence.map((item, index) => {
+                                        return <tr key={index}>
                                         <td>{item.type}</td>
                                         <td>{item.days}</td>
                                         <td>From: {item.startDate} To: {item.stopDate}</td>
