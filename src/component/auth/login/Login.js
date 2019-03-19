@@ -49,7 +49,7 @@ class Login extends React.Component{
           user = JSON.stringify(user)
           console.log(user)
           localStorage.setItem('currentUser', user)
-          window.location.replace('employee-dashboadr')
+          window.location.replace('employee-dashboard')
 
         } else {
           this.setState({invalidError: true})

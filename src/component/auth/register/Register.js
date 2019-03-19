@@ -64,7 +64,7 @@ class Register extends React.Component{
           //   Email: ${this.state.email}
           //   Password: ${this.state.password}
           // `);
-          window.location.replace('employee-dashboadr')
+          window.location.replace('employee-dashboard')
         } else {
           this.setState({invaildError: true})
           // console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
