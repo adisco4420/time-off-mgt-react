@@ -36,12 +36,17 @@ class Header extends Component {
                 </li>
                 <li className="nav-item active ">
                     <Link className="nav-link text-light" to="/employee-dashboard">
-                        Employee Dashboard <span className="sr-only">(current)</span>
+                        Employee Dashboard 
+                    </Link>
+                </li>
+                <li className="nav-item active ">
+                    <Link className="nav-link text-light" to="/team-view">
+                        Team View 
                     </Link>
                 </li>
                 <li className="nav-item active ">
                     <Link className="nav-link bg-light text-primary" to="/new-absence">
-                        New Absence <span className="sr-only">(current)</span>
+                        New Absence
                     </Link>
                 </li>
                 </ul>

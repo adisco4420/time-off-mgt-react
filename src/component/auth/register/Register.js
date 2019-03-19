@@ -34,6 +34,9 @@ class Register extends React.Component{
           firstName: null,
           lastName: null,
           email: null,
+          department: null,
+          dob: null,
+          manager: null,
           password: null,
           invaildError: false,
           formErrors: {
@@ -41,6 +44,9 @@ class Register extends React.Component{
             firstName: "",
             lastName: "",
             email: "",
+            department: '',
+            dob: '',
+            manager: '',
             password: ""
           }
         };
@@ -94,6 +100,21 @@ class Register extends React.Component{
               ? ""
               : "invalid email address";
             break;
+        case "department":
+        formErrors.department =  value.length < 3 || !onlyLetterRegex.test(value)
+          ? "department must be up to 3 characters (alphabet only)"
+          : "";
+        break;  
+        case "dob":
+        formErrors.dob =  value.length < 3
+        ? "date of birth must be up to 3 characters (alphabet only)"
+        : "";
+        break;
+        case "manager":
+        formErrors.manager =  value.length < 3 || !onlyLetterRegex.test(value)
+        ? "manager must be up to 3 characters (alphabet only)"
+        : "";
+      break;
           case "password":
             formErrors.password =
               value.length < 6 ? "minimum 6 characaters required" : "";
@@ -150,6 +171,41 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.email}</span>
               )}
                    </div>
+
+
+
+                    <div className="form-group">
+                    <label >Department</label>
+                    <input type="text" className="form-control"  placeholder="Dpartment" 
+                          name="department"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.department === null) ? 
+                    <p className="text-danger">* dpartment is required</p> : '' } 
+                      {formErrors.department.length > 0 && (
+                         <span className="text-danger">{formErrors.department}</span>
+              )}
+                   </div>
+
+                      <div className="form-group">
+                    <label >Date Of Birth</label>
+                    <input type="date" className="form-control"   
+                          name="dob"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.dob === null) ? 
+                    <p className="text-danger">* date of birth is required</p> : '' } 
+                      {formErrors.dob.length > 0 && (
+                         <span className="text-danger">{formErrors.dob}</span>
+              )}
+                   </div>
+
+                  <div className="form-group">
+                    <label >Manager</label>
+                    <input type="text" className="form-control" placeholder="manager"
+                          name="manager"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.manager === null) ? 
+                    <p className="text-danger">* manager is required</p> : '' } 
+                      {formErrors.manager.length > 0 && (
+                         <span className="text-danger">{formErrors.manager}</span>
+              )}
+                   </div>
                 <div className="form-group">
                     <label >Password</label>
                     <input type="password" className="form-control"  placeholder="Password" 
@@ -180,11 +236,13 @@ class Register extends React.Component{
                         <option>India/New Delhi</option>
                     </select>
                     </div>
-                <button type="submit" className="btn btn-primary">
-                { formValid(this.state) ? <Link to="/login"></Link> :
-                  'Register'
+            
+                { formValid(this.state) ? 
+                <button className="btn btn-primary ">
+                <Link className="text-light" to="/employee-dashboard">Register</Link></button> :
+                      <button type="submit" className="btn btn-primary">Register</button>
                 }
-                </button>
+             
                     </div>
                 </form>
             </div>

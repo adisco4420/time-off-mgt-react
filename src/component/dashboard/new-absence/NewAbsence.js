@@ -1,6 +1,7 @@
 import React , { Component } from 'react';
 import './style.css';
 const typeOfTimeOff = [
+    {name: '-- Select Leave Type --', day: 1},
     {name: 'Vacation', days: 2},
     {name: 'Maternity Leave', days: 10},
     {name: 'Medical Checkup', days: 5},
@@ -11,6 +12,7 @@ date = `${date.getFullYear()}-0${date.getMonth() + 1 }-${date.getDate()}`
 
 class NewAbsenceForm extends Component {
     state = {
+        leaveType: '',
         startTime: date,
         stopTime: date,
         diffStartTimeStopTime: '0 Days',
@@ -21,8 +23,9 @@ class NewAbsenceForm extends Component {
         this.setState({startTime: startTimeValue})
         const start = startTimeValue.replace(/-/g, '');
         const stop = this.state.stopTime.replace(/-/g, '');
-        const diff = stop - start
-        this.setState({diffStartTimeStopTime: `${diff} Days`})
+        let diff = stop - start
+        diff = this.calculateDuration(diff)
+        this.setState({diffStartTimeStopTime: `${diff}`})
         console.log(this.state.diffStartTimeStopTime)
     }
     handleStopTime = e => {
@@ -30,12 +33,18 @@ class NewAbsenceForm extends Component {
         this.setState({stopTime: stopTimeValue})
         const start = this.state.startTime.replace(/-/g, '');
         const stop = stopTimeValue.replace(/-/g, '');
-        const diff = stop - start
-        this.setState({diffStartTimeStopTime: `${diff} Days`})
+        let diff = stop - start
+        diff = this.calculateDuration(diff)
+        this.setState({diffStartTimeStopTime: `${diff}`})
         console.log(diff)
     }
+    handeleLeavetype = e => {
+        console.log(e.target.value)
+        this.setState({leaveType: e.target.value})
+    }
     hamdleFormSubmit = () => {
-        if (!this.state.diffStartTimeStopTime.includes('-') && this.state.diffStartTimeStopTime !== '0 Days') {
+        if ((!this.state.diffStartTimeStopTime.includes('-') && this.state.diffStartTimeStopTime !== '0 Days') && 
+            this.state.leaveType !== '-- Select Leave Type --') {
             console.log(this.state.diffStartTimeStopTime)
             alert('saved wait for approval')
         } else {
@@ -45,6 +54,48 @@ class NewAbsenceForm extends Component {
             this.setState({showError: true})
         } 
     } 
+    calculateDuration = (days) => {
+        let not = undefined;
+          let value = days
+          let result = days
+          let day , month, weeks
+          if(value >= 30) {
+            month = value / 30;
+            month = Math.floor(month)
+            value = value % 30
+          }if (value >= 7) {
+              day = value % 7;
+              weeks = value / 7;
+              weeks = Math.floor(weeks);
+          } else {
+            day = value
+          }
+          if(month !== not && (weeks === not && day === not) ) {
+             result = `${month} Month`
+          }
+          if((month === not && day === 0) && weeks !== not ) {
+             result = `${weeks} Week`
+          }
+          console.log(day)
+          if(day !== not && (month === not && weeks ===not )) {
+            result = `${day} day`
+          }
+          if(month !== not && weeks !== not && day !== not) {
+            result = `${month} Month ${weeks} Week ${day} Day`
+          }
+            console.log(weeks)
+          if(month !== not && weeks !== not && day === 0) {
+            result = `${month} Month ${weeks} Week`
+          }
+          if(month !== not && weeks === not && day !== not ) {
+            result = `${month} Month ${day} Day`
+          }
+          if (month === not && weeks && day) {
+            result = `${weeks} Week ${day} Day`
+          }
+          // result = `${month} Month ${weeks} Week ${day} Day`
+          return result
+      }
     render() {
         return(
             <div className="container absence mt-3 align-center ">
@@ -57,14 +108,23 @@ class NewAbsenceForm extends Component {
         <div className="col-12">
             <div className="form-group">
                     <label htmlFor="exampleFormControlSelect1"><h6>Leave Type</h6></label>
-                    <select className="form-control" id="exampleFormControlSelect1">
+                    <select onClick={this.handeleLeavetype} className="form-control" id="exampleFormControlSelect1">
                     {
-                        typeOfTimeOff.map(item => {
-                            return <option key={item.days}>{item.name}</option>
+                        typeOfTimeOff.map((item, index) => {
+                            return <option key={index}>{item.name}</option>
                         })
                     }
                     
                     </select>
+                {
+                    (this.state.leaveType !== '-- Select Leave Type --') ? '' : 
+                    <p className="text-danger">select valid leave type</p>
+                }
+                {
+                     (this.state.leaveType === '' && this.state.showError) ? 
+                     <p className="text-danger">*leave type is required</p> : 
+                    ''
+                }
             </div>
         </div>
     </div>
