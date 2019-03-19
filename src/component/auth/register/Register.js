@@ -56,15 +56,15 @@ class Register extends React.Component{
         e.preventDefault();
     
         if (formValid(this.state)) {
-          console.log(`
-            --SUBMITTING--
-           Company Name: ${this.state.companyName}
-            First Name: ${this.state.firstName}
-            Last Name: ${this.state.lastName}
-            Email: ${this.state.email}
-            Password: ${this.state.password}
-          `);
-          alert('registration successful')
+          // console.log(`
+          //   --SUBMITTING--
+          //  Company Name: ${this.state.companyName}
+          //   First Name: ${this.state.firstName}
+          //   Last Name: ${this.state.lastName}
+          //   Email: ${this.state.email}
+          //   Password: ${this.state.password}
+          // `);
+          window.location.replace('employee-dashboadr')
         } else {
           this.setState({invaildError: true})
           // console.error("FORM INVALID - DISPLAY ERROR MESSAGE");
@@ -129,6 +129,33 @@ class Register extends React.Component{
         const { formErrors } = this.state;
         return(
             <div>
+                                 <nav className="navbar navbar-expand-lg navbar-light bg-primary navbar-fixed-top  ">
+                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+
+            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul className="navbar-nav mr-auto">
+                <li className="nav-item active ml-2">
+                    <Link className="nav-link text-light" to="/">
+                        TimeOff.Management <span className="sr-only">(current)</span>
+                    </Link>
+                </li>
+
+                </ul>
+                
+                
+                    <ul className="navbar-nav ml-auto">
+                        <li className="nav-item mr-3">
+                        <Link className="nav-link text-light" to="/login" >Login </Link>
+                        </li>
+                        <li className="nav-item ml-3">
+                            <Link className="nav-link btn btn-outline-light text-light" to="/register">Sign Up</Link>
+                        </li>
+                </ul>
+
+            </div>
+            </nav>
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Register Form </h1>
                 </div>
