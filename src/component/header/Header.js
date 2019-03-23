@@ -9,9 +9,8 @@ class Header extends Component {
             koloLogin: true,
         }
         console.log(this.state.koloLogin)
+        console.log(this.props)
     }
-
- 
     handleLogout = () => {
         localStorage.clear('currentUser')
         this.setState({koloLogin: !this.state.koloLogin})
@@ -34,24 +33,32 @@ class Header extends Component {
                         TimeOff.Management <span className="sr-only">(current)</span>
                     </Link>
                 </li>
-                <li className="nav-item active ">
-                    <Link className="nav-link text-light" to="/employee-dashboard">
-                        Employee Dashboard 
-                    </Link>
-                </li>
-                <li className="nav-item active ">
-                    <Link className="nav-link text-light" to="/team-view">
-                        Team View 
-                    </Link>
-                </li>
-                <li className="nav-item active ">
-                    <Link className="nav-link bg-light text-primary" to="/new-absence">
-                        New Absence
-                    </Link>
-                </li>
+                {
+                   this.props.isLogin ? 
+                <React.Fragment>                   
+                    <li className="nav-item active ">
+                   <Link className="nav-link text-light" to="/employee-dashboard">
+                       Employee Dashboard 
+                   </Link>
+                    </li>
+                    <li className="nav-item active ">
+                        <Link className="nav-link text-light" to="/team-view">
+                            Team View 
+                        </Link>
+                    </li>
+                    <li className="nav-item active ">
+                        <Link className="nav-link bg-light text-primary" to="/new-absence">
+                            New Absence
+                        </Link>
+                    </li>
+               </React.Fragment>
+                     : ''
+                }
+          
+                
                 </ul>
                 {
-                    !this.state.koloLogin ? 
+                    !this.props.isLogin ? 
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item mr-3">
                         <Link className="nav-link text-light" to="/login" >Login </Link>

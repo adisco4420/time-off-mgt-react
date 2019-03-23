@@ -2,6 +2,8 @@ import React , { Component } from 'react'
 import { Link } from 'react-router-dom'
 import './style.css'
 
+import Header from './../../header/Header'
+
 const allLeaveRequest = [
     {   employee: 'Somoye', department: 'Accounting', DOR: '01/02/2018', 
         leavedate: 'from 04/02/2018 to 10/02/2018', type: 'Vacation', days: 8 
@@ -21,45 +23,8 @@ const allLeaves = [
 class TeamView extends Component {
     render() {
         return (
-        <div>           <nav className="navbar navbar-expand-lg navbar-light bg-primary navbar-fixed-top  ">
-            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav mr-auto">
-            <li className="nav-item active ml-2">
-                <Link className="nav-link text-light" to="/">
-                    TimeOff.Management <span className="sr-only">(current)</span>
-                </Link>
-            </li>
-            <li className="nav-item active ">
-                <Link className="nav-link text-light" to="/employee-dashboard">
-                    Employee Dashboard 
-                </Link>
-            </li>
-            <li className="nav-item active ">
-                <Link className="nav-link text-light" to="/team-view">
-                    Team View 
-                </Link>
-            </li>
-            <li className="nav-item active ">
-                <Link className="nav-link bg-light text-primary" to="/new-absence">
-                    New Absence
-                </Link>
-            </li>
-            </ul>
-            
-                <ul className="navbar-nav ml-auto">
-                        <li className="nav-item ml-3" onClick={this.handleLogout}>
-                        <Link className="nav-link btn btn-outline-light text-light" to="/login">Logout</Link>
-                        </li>
-                    </ul>
-        
-         
-
-        </div>
-        </nav>
+        <div>          
+           <Header isLogin={true} />
             <div className="container mt-3 mb-5">
             <h4>Admin Dashboard</h4>    
             <h6 className="text-info mb-2">Leave Request To Approve Or Decline</h6>     

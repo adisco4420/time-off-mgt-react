@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import './login.css'
 
+import Header from './../../header/Header'
+
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
@@ -40,16 +42,11 @@ class Login extends React.Component{
         e.preventDefault();
     
         if (formValid(this.state)) {
-          // console.log(`
-          //   --SUBMITTING--
-          //   Email: ${this.state.email}
-          //   Password: ${this.state.password}
-          // `);
           let user = {email: this.state.email, password: this.state.password}
           user = JSON.stringify(user)
           console.log(user)
           localStorage.setItem('currentUser', user)
-          window.location.replace('employee-dashboard')
+          // window.location.replace('employee-dashboard')
 
         } else {
           this.setState({invalidError: true})
@@ -82,33 +79,8 @@ class Login extends React.Component{
         const { formErrors } = this.state;
         return(
             <div>
-                                 <nav className="navbar navbar-expand-lg navbar-light bg-primary navbar-fixed-top  ">
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul className="navbar-nav mr-auto">
-                <li className="nav-item active ml-2">
-                    <Link className="nav-link text-light" to="/">
-                        TimeOff.Management <span className="sr-only">(current)</span>
-                    </Link>
-                </li>
-
-                </ul>
-                
-                
-                    <ul className="navbar-nav ml-auto">
-                        <li className="nav-item mr-3">
-                        <Link className="nav-link text-light" to="/login" >Login </Link>
-                        </li>
-                        <li className="nav-item ml-3">
-                            <Link className="nav-link btn btn-outline-light text-light" to="/register">Sign Up</Link>
-                        </li>
-                </ul>
-
-            </div>
-            </nav>
+             <Header isLogin={false} />
+       
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Login Form </h1>
                 </div>
