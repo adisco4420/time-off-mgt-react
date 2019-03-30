@@ -1,4 +1,4 @@
-This project was is hosted at (https://sodiq-time-off.netlify.com).
+This project was  hosted at (https://sodiq-time-off.netlify.com).
 
 ## Available Scripts
 
