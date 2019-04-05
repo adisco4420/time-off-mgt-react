@@ -1,5 +1,6 @@
 This project was  hosted at (https://sodiq-time-off.netlify.com).
-
+## This project is also hosted on heroku with express server 
+([https://time-off-mgt.herokuapp.com/]) 
 ## Available Scripts
 
 In the project directory, you can run:
