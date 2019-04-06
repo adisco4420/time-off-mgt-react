@@ -13,7 +13,11 @@ const typeOfTimeOff = [
     {name: 'Marriage Purpose', days: 7},
 ]
 let date = new Date();
-date = `${date.getFullYear()}-0${date.getMonth() + 1 }-${date.getDate()}`
+let month = date.getMonth(); let day = date.getDate()
+day = day.toString().length === 1 ? `0${day}` : day;
+month = month.toString().length === 1 ? `0${month + 1}` : month + 1;
+
+date = `${date.getFullYear()}-${month}-${day}`
 
 class NewAbsenceForm extends Component {
     state = {

@@ -3,22 +3,23 @@ const path = require('path')
 const express = require('express');
 const axios = require('axios');
 
-const port = process.env.PORT; 
+const port = process.env.PORT || 3000; 
 const app = express();
 const server = http.createServer(app);
 // Use express static
-if (process.env.NODE_ENV !== "production") {
-    app.use(express.static(path.join(__dirname, '../public')));
-} else {
-    app.use(express.static(path.join(__dirname, '../build')));
-}
-
+// if (process.env.NODE_ENV !== "production") {
+//     app.use(express.static(path.join(__dirname, '../public')));
+// } else {
+//     app.use(express.static(path.join(__dirname, '../build')));
+// }
+app.use(express.static(path.join(__dirname, '../build')));
 app.get('/', (req, res) => {
-    if (process.env.NODE_ENV !== "production") {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    } else {
-        res.sendFile(path.join(__dirname, '../build/index.html'));
-    }
+    res.sendFile(path.join(__dirname, '../build/index.html'));
+    // if (process.env.NODE_ENV !== "production") {
+    //     res.sendFile(path.join(__dirname, '../public/index.html'));
+    // } else {
+    //     res.sendFile(path.join(__dirname, '../build/index.html'));
+    // }
 });
 
 app.get('/holidays', (req, res) => {
