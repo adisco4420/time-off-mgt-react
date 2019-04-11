@@ -7,9 +7,9 @@ exports.up = async function(knex, Promise) {
                 table.increments();
                 table.string('first_name').notNullable();
                 table.string('last_name').notNullable();
-                table.string('phone', 15).notNullable();
                 table.string('email').nullable();
                 table.string('password').notNullable();
+                table.date('timestamps ').notNullable();
 
 
                 table.index('user_id');

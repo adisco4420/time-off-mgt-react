@@ -13,17 +13,14 @@ const knex = require('knex')(config.development);
 // const version = await knex.raw('SELECT VERSION()')
 (async () => {
     try {
-        const employee = {
-            employee_id: 'LU-00001',
+        const user = {
             first_name: 'Sodiq',
             last_name: 'Alabi',
-            gender: 'male',
-            dob: '2019-04-02',
-            phone: '09064155137',
+            password: '1234577',
             email: 'adisco4420@mail.com',
-            department: 'Software'
+            timestamps: '2019-04-02',
         }
-        const result = await knex('employees').insert(employee);
+        const result = await knex('users').insert(user);
         console.log(result);
         
         // const version = await knex.raw('SELECT VERSION()');
