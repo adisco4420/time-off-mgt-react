@@ -3,7 +3,19 @@ import { Link } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
 import './HomeStyle.css'
 import Header from '../header/Header';
+
+import axios from 'axios';
+
 class Home extends Component { 
+    componentDidMount() {
+        axios.get(`https://jsonplaceholder.typicode.com/users`)
+          .then(res => {
+            const persons = res.data;
+            console.log(persons)
+            // this.setState({ persons });
+          })
+          .catch(err => console.log(err))
+      }
     render() {
         return (
             <div>

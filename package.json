@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "formik": "^1.5.1",
+    "mysql": "^2.16.0",
     "react": "^16.8.4",
     "react-addons-css-transition-group": "^15.6.2",
     "react-calendar": "^2.18.1",
@@ -14,13 +16,18 @@
     "react-infinite-calendar": "^2.3.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.8",
-    "sweetalert2": "^8.5.0"
+    "sweetalert2": "^8.5.0",
+    "knex": "^0.16.3",
+    "mysql": "^2.16.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "create-migration": "./node_modules/.bin/knex migrate:make --env development",
+    "migrate:up": "./node_modules/.bin/knex migrate:latest --env development",
+    "migrate:down": "./node_modules/.bin/knex migrate:rollback --env development",
     "server": "node server/index.js"
   },
   "eslintConfig": {

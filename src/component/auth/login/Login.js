@@ -4,6 +4,8 @@ import './login.css'
 
 import Header from './../../header/Header'
 
+import axios from 'axios';
+
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
@@ -43,10 +45,27 @@ class Login extends React.Component{
     
         if (formValid(this.state)) {
           let user = {email: this.state.email, password: this.state.password}
-          user = JSON.stringify(user)
-          console.log(user)
-          localStorage.setItem('currentUser', user)
           // window.location.replace('employee-dashboard')
+          // axios.post('https://jsonplaceholder.typicode.com/posts', user)
+          //   .then(data => console.log(data))
+          //   .catch(err => console.log(err));
+            fetch("/login", {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify(user)
+          }).then(function(response) {
+              if (response.status >= 400) {
+                throw new Error("Bad response from server");
+              }
+              return response.json();
+          }).then(function(data) {
+              console.log(data)    
+              if(data == "success"){
+                 this.setState({msg: "Thanks for registering"});  
+              }
+          }).catch(function(err) {
+              console.log(err)
+          });
 
         } else {
           this.setState({invalidError: true})
@@ -73,7 +92,7 @@ class Login extends React.Component{
             break;
         }
     
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+        this.setState({ formErrors, [name]: value });
       };
     render() {
         const { formErrors } = this.state;

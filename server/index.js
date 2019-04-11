@@ -1,6 +1,7 @@
 const http = require('http');
 const path = require('path')
 const express = require('express');
+const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const port = process.env.PORT || 3000; 
@@ -12,7 +13,11 @@ const server = http.createServer(app);
 // } else {
 //     app.use(express.static(path.join(__dirname, '../build')));
 // }
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../build')));
+
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../build/index.html'));
     // if (process.env.NODE_ENV !== "production") {
@@ -34,6 +39,16 @@ app.get('/holidays', (req, res) => {
             res.json({ message: error.message })
         });
 });
+app.post('/login', (req, res) => {
+    console.log(req.body)
+    axios.post('https://jsonplaceholder.typicode.com/posts', req.body)
+    .then(response => {
+        res.json(response.data);
+    }, error => {
+        res.status(400)
+        res.json({ message: error.message })
+    });
+})
 
 server.listen(port, () => {
     console.log(`Server is listening for connection on ${port}`);
