@@ -1,9 +1,7 @@
 import React from 'react';
-import {Link} from 'react-router-dom'
 import './register.css'
 import Header from './../../header/Header'
 import axios from 'axios';
-
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -42,6 +40,8 @@ class Register extends React.Component{
           manager: null,
           password: null,
           invaildError: false,
+          errorResponse: false,
+          successResponse: false,
           formErrors: {
             companyName: '',
             firstName: "",
@@ -54,13 +54,12 @@ class Register extends React.Component{
           }
         };
       }
-      storeToLocalstorage = (token) => {
-        localStorage.setItem('userToken', token)
+      storeToLocalstorage = (data) => {
+        localStorage.setItem('userToken', data)
       }
     
       handleSubmit = e => {
-        e.preventDefault();
-    
+        e.preventDefault(); 
         if (formValid(this.state)) {
           const body = {
             firstName: this.state.companyName,
@@ -73,15 +72,18 @@ class Register extends React.Component{
             password: this.state.password
           };
           console.log('success');
-          axios.post('http://localhost:6004/employee/register', body)
-          .then((data) => {
+          axios.post('http://localhost:6004/employee/register', body).then((data) => {
             console.log(data.data)
-            const token = data.data.data.token
-            this.storeToLocalstorage(token)
+            const userData = data.data.data
+            this.storeToLocalstorage(userData)
+            this.props.history.push('/employee-dashboard')
           })
-          .catch(function (error) {
-            console.log(error);
+          .catch(err => {
+            const errorMsg = err.response.data.message;
+            this.setState({errorResponse: errorMsg})
+            console.log(err.response)
           })
+         
         } else {
           this.setState({invaildError: true})
         }
@@ -146,8 +148,12 @@ class Register extends React.Component{
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Register Form </h1>
                 </div>
+            
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
                     <div className="">
+                    {
+                  this.state.errorResponse ? <div className="alert alert-danger text-center">{this.state.errorResponse}</div> : ''
+                }
                     <div className="form-group">
                     <label >Company Name</label>
                     <input type="text" className="form-control"  placeholder="Company Name" 
@@ -243,7 +249,7 @@ class Register extends React.Component{
                     </div>
                     <div className="form-group">
                     <label >Time Zone</label>
-                    <select className="form-control" id="sel1">
+                    <select className="form-control" id="seld">
                         <option>West Africa/ Lagos</option>
                         <option>Europe/London</option>
                         <option>America/Califonia</option>

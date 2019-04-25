@@ -1,5 +1,5 @@
 import React , { Component } from 'react';
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import Calendar from 'react-calendar';
 import './employee.css';
 import Header from './../../header/Header'
@@ -33,6 +33,11 @@ const MoreCalendarDate = [
     new Date(2019 , 8, 16), new Date(2019, 9, 8), new Date(2018, 10, 30), new Date(2019, 11, 24)
 ]
 class EmployeeDashboard extends Component {
+    componentDidMount() {
+        if (!localStorage.getItem('userToken')) {
+            this.props.history.push('/login');
+        }
+    }
     state = {
         showMore: false,
         showMoreText: 'Show More'

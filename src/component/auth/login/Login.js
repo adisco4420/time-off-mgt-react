@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import './login.css'
 
 import Header from './../../header/Header'
@@ -33,11 +33,15 @@ class Login extends React.Component{
           email: null,
           password: null,
           invalidError : false,
+          errResponse: false,
           formErrors: {
             email: "",
             password: ""
           }
         };
+      }
+      storeToLocalstorage = (data) => {
+        localStorage.setItem('userToken', data)
       }
     
       handleSubmit = e => {
@@ -47,8 +51,16 @@ class Login extends React.Component{
           let user = {email: this.state.email, password: this.state.password}
           // window.location.replace('employee-dashboard')
           axios.post('http://localhost:6004/employee/login', user)
-            .then(data => console.log(data.data))
-            .catch(err => console.log(err));
+            .then(data => {
+              const result = data.data.data;
+              this.storeToLocalstorage(result);
+              this.props.history.push('/employee-dashboard')
+            })
+            .catch(err => {
+              const errorMsg = err.response ? err.response.data.message : err.response;
+              this.setState({errResponse: errorMsg})
+              console.log(errorMsg);
+            });
 
         } else {
           this.setState({invalidError: true})
@@ -88,6 +100,10 @@ class Login extends React.Component{
                 </div>
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
                     <div className="">
+                    {
+                  this.state.errResponse ? <div className="alert alert-danger text-center">
+                  {this.state.errResponse}</div> : ''
+                }
                     <div className="form-group">
                     <label >Email address</label>
                     <input type="email" className="form-control"  placeholder="Enter email" 

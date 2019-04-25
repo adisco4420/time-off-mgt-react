@@ -16,17 +16,18 @@ router.post('/register', async function(req, res) {
     delete result['password'];
     res.status(200).json({
       status: 'success',
-      data: {employee: result, token},
+      data: {result: result, token},
     });
   } catch (err) {
       if (err.code === 11000) {
           res.status(400).json({status: 'error', message: 'this email already exist'})
-          return;
+      } else {
+        res.status(500).json({
+          status: 'error',
+          message: err,
+        });
       }
-    res.status(500).json({
-      status: 'error',
-      message: err,
-    });
+
   }
 });
 
@@ -35,11 +36,14 @@ router.post('/login', async function (req, res) {
   try {
     const employess = await EmployeeModel.findOne({email: req.body.email}, '+password');
     if(!employess) return res.status(404).json({status:'not found', message: 'user not found'});
+
     const isValidPassword = await bcrypt.compare(req.body.password, employess.password)
     if (!isValidPassword) return res.status(401).json({status:'error', message: 'Invalid password'})
 
+    const result = employess.toJSON();
+    delete result['password'];
     const token = jwt.sign({id: employess.id}, SECRET);
-    res.status(200).json({token})
+    res.status(200).json({result, token})
 
   } catch (error) {
       res.status(404).json({status: 'error', message: 'error occured'})
