@@ -14,6 +14,7 @@ const emailRegex = RegExp(
     let valid = true;
   
     // validate form errors being empty
+    console.log(formErrors);
     Object.values(formErrors).forEach(val => {
       val.length > 0 && (valid = false);
     });
@@ -61,9 +62,16 @@ class Register extends React.Component{
         e.preventDefault();
     
         if (formValid(this.state)) {
-          const body = this.state;
-          delete body['formErrors'];
-          delete body['invaildError'];
+          const body = {
+            firstName: this.state.companyName,
+            companyName: this.state.firstName,
+            lastName: this.state.lastName,
+            dob: this.state.dob,
+            department: this.state.department,
+            manager: this.state.manager,
+            email: this.state.email,
+            password: this.state.password
+          };
           console.log('success');
           axios.post('http://localhost:6004/employee/register', body)
           .then((data) => {
