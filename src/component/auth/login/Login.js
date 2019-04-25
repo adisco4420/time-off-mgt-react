@@ -46,26 +46,9 @@ class Login extends React.Component{
         if (formValid(this.state)) {
           let user = {email: this.state.email, password: this.state.password}
           // window.location.replace('employee-dashboard')
-          // axios.post('https://jsonplaceholder.typicode.com/posts', user)
-          //   .then(data => console.log(data))
-          //   .catch(err => console.log(err));
-            fetch("/login", {
-              method: 'POST',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify(user)
-          }).then(function(response) {
-              if (response.status >= 400) {
-                throw new Error("Bad response from server");
-              }
-              return response.json();
-          }).then(function(data) {
-              console.log(data)    
-              if(data == "success"){
-                 this.setState({msg: "Thanks for registering"});  
-              }
-          }).catch(function(err) {
-              console.log(err)
-          });
+          axios.post('http://localhost:6004/employee/login', user)
+            .then(data => console.log(data.data))
+            .catch(err => console.log(err));
 
         } else {
           this.setState({invalidError: true})
@@ -128,12 +111,7 @@ class Login extends React.Component{
               )}
                 </div>
             
-                  { formValid(this.state) ?    
-                  <button onClick={this.handleSubmit} type="button" className="btn btn-primary text-light">
-                       <Link  className="text-light" to="/employee-dashboard">Login</Link>
-                  </button>
-                  :    <button type="submit" className="btn btn-primary text-light">Login</button>
-                  }
+                <button type="submit" className="btn btn-primary text-light">Login</button>
             
                     </div>
                 </form>

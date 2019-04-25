@@ -8,7 +8,6 @@
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "formik": "^1.5.1",
-    "mysql": "^2.16.0",
     "react": "^16.8.4",
     "react-addons-css-transition-group": "^15.6.2",
     "react-calendar": "^2.18.1",
@@ -18,7 +17,14 @@
     "react-scripts": "2.1.8",
     "sweetalert2": "^8.5.0",
     "knex": "^0.16.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "bcrypt": "^3.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
+    "express": "^4.16.4",
+    "joi": "^14.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.5.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -28,7 +34,7 @@
     "create-migration": "./node_modules/.bin/knex migrate:make --env development",
     "migrate:up": "./node_modules/.bin/knex migrate:latest --env development",
     "migrate:down": "./node_modules/.bin/knex migrate:rollback --env development",
-    "server": "node server/index.js"
+    "server": "node server/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -41,5 +47,6 @@
   ],
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.7.2"
-  }
+  },
+  "proxy": "http://localhost:6004"
 }

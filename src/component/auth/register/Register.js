@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 import './register.css'
-
 import Header from './../../header/Header'
+import axios from 'axios';
 
 
 const emailRegex = RegExp(
@@ -58,7 +58,15 @@ class Register extends React.Component{
         e.preventDefault();
     
         if (formValid(this.state)) {
-          // window.location.replace('employee-dashboard')
+          const body = this.state;
+          delete body['formErrors'];
+          delete body['invaildError'];
+          console.log('success');
+          axios.post('http://localhost:6004/employee/register', body)
+          .then((data) => console.log(data.data))
+          .catch(function (error) {
+            console.log(error);
+          })
         } else {
           this.setState({invaildError: true})
         }
@@ -113,7 +121,7 @@ class Register extends React.Component{
             break;
         }
     
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+        this.setState({ formErrors, [name]: value });
       };
     render() {
         const { formErrors } = this.state;
@@ -228,11 +236,7 @@ class Register extends React.Component{
                     </select>
                     </div>
             
-                { formValid(this.state) ? 
-                <button className="btn btn-primary ">
-                <Link className="text-light" to="/employee-dashboard">Register</Link></button> :
-                      <button type="submit" className="btn btn-primary">Register</button>
-                }
+                    <button type="submit" className="btn btn-primary">Register</button>
              
                     </div>
                 </form>
