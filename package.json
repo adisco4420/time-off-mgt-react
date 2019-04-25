@@ -46,7 +46,8 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.7.2"
+    "@fortawesome/fontawesome-free": "^5.7.2",
+    "@types/mongoose": "^5.3.26"
   },
   "proxy": "http://localhost:6004"
 }
