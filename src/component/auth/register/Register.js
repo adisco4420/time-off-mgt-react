@@ -53,6 +53,9 @@ class Register extends React.Component{
           }
         };
       }
+      storeToLocalstorage = (token) => {
+        localStorage.setItem('userToken', token)
+      }
     
       handleSubmit = e => {
         e.preventDefault();
@@ -63,7 +66,11 @@ class Register extends React.Component{
           delete body['invaildError'];
           console.log('success');
           axios.post('http://localhost:6004/employee/register', body)
-          .then((data) => console.log(data.data))
+          .then((data) => {
+            console.log(data.data)
+            const token = data.data.data.token
+            this.storeToLocalstorage(token)
+          })
           .catch(function (error) {
             console.log(error);
           })
