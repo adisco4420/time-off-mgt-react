@@ -35,11 +35,11 @@ router.post('/register', async function(req, res) {
 router.post('/login', async function (req, res) {
   try {
     const employess = await EmployeeModel.findOne({email: req.body.email}, '+password');
-    if(!employess) return res.status(404).json({status:'not found', message: 'user not found'});
+    if(!employess) return res.status(404).json({status:'not found', message: 'invalid password or email'});
 
     const isValidPassword = await bcrypt.compare(req.body.password, employess.password)
-    if (!isValidPassword) return res.status(401).json({status:'error', message: 'Invalid password'})
-
+    if (!isValidPassword) return res.status(401).json({status:'error', message: 'invalid password or email'})
+    
     const result = employess.toJSON();
     delete result['password'];
     const token = jwt.sign({id: employess.id}, SECRET);
