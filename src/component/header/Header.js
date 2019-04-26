@@ -1,20 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './HeaderStyle.css';
 
 class Header extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            koloLogin: true,
-        }
-        console.log(this.state.koloLogin)
-        console.log(this.props)
-    }
     handleLogout = () => {
-        localStorage.clear('currentUser')
-        this.setState({koloLogin: !this.state.koloLogin})
-       console.log(this.state.koloLogin)
+        localStorage.removeItem('currentUserTimeOff')
+        this.props.history.push('/login')
     }
     
   render() {
@@ -84,4 +75,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);

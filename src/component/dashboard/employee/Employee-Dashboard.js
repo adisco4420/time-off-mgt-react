@@ -1,11 +1,10 @@
 import React , { Component } from 'react';
-// import { Link } from 'react-router-dom'
 import Calendar from 'react-calendar';
 import './employee.css';
 import Header from './../../header/Header'
 
 // Render the Calendar
-const username = 'Sodiq Alabi';
+
 const typeOfTimeOff = [
     {name: 'Vacation', days: 2},
     {name: 'Maternity Leave', days: 10},
@@ -13,7 +12,6 @@ const typeOfTimeOff = [
     {name: 'Marriage Purpose', days: 7},
     // {name: 'Attend Meetup', days: 3},
 ]
-const employeDetail = {name: 'Alabi Sodiq', departement: 'Software', position: 'Frontend Developer'}
 const requests = [
     {name: 'Medical Checkup', date: '12/03/2019'},
     {name: 'Maternity Leave', date: '23/02/2019'},
@@ -32,21 +30,29 @@ const MoreCalendarDate = [
     new Date(2019 , 4, 2), new Date(2019, 5, 13), new Date(2018, 6, 25), new Date(2019, 7, 21),
     new Date(2019 , 8, 16), new Date(2019, 9, 8), new Date(2018, 10, 30), new Date(2019, 11, 24)
 ]
+let userInfos = ''
 class EmployeeDashboard extends Component {
+    
     componentDidMount() {
-        if (!localStorage.getItem('userToken')) {
+        if (!localStorage.getItem('currentUserTimeOff')) {
             this.props.history.push('/login');
+        } else {
+            userInfos = JSON.parse(localStorage.getItem('currentUserTimeOff')).result;
+            this.setState({userInfo: userInfos})
+            // console.log(userInfos);
         }
     }
     state = {
         showMore: false,
-        showMoreText: 'Show More'
+        showMoreText: 'Show More',
+        userInfo: ''
     }
    handeleShowMore = () => {
         this.setState({
             showMore: !this.state.showMore,
             showMoreText: 'Show Less'
         })
+        
     }
     render(){
         return(
@@ -55,7 +61,7 @@ class EmployeeDashboard extends Component {
      
                 <div  className="ml-3 mt-3">
                 <h3>Empolyee Dashboard</h3>
-                <h5>{username}</h5>
+                <h5>{this.state.userInfo.firstName} {this.state.userInfo.lastName}</h5>
                 </div>
 
                 <div className="container">
@@ -113,9 +119,9 @@ class EmployeeDashboard extends Component {
                             <div className="card-body text-center ">
                                 <i className="fa fa-user-circle-o fa-3x "></i>
                                 <div className="mt-2">
-                                    <h6>Name: {employeDetail.name}</h6>
-                                    <h6>Department: {employeDetail.departement}</h6>
-                                    <h6>Position: {employeDetail.position}</h6>
+                                    <h6>Name: {this.state.userInfo.firstName} {this.state.userInfo.lastName}</h6>
+                                    <h6>Department: {this.state.userInfo.department} </h6>
+                                    <h6>Manager: {this.state.userInfo.manager}</h6>
                                 </div>
                             </div> 
                         </div>
