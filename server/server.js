@@ -5,10 +5,11 @@ const cors = require('cors');
 const EmployeeRoute = require('./routes/EmployeeRoute');
 const port = process.env.PORT || 6004; 
 const app = express();
-
+const dotenv = require('dotenv');
+dotenv.config();
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/timeoff')
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
     console.log('✌🏾 Successfully connected to MongoDB');
   })
