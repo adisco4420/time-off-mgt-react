@@ -75,13 +75,13 @@ class Register extends React.Component{
           this.setState({loading: true, errorResponse: false})
           axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
             // console.log(data.data)
-            const userData = data.data
+            const userData = data.data.data
             this.storeToLocalstorage(userData)
             this.setState({loading: false})
             this.props.history.push('/employee-dashboard')
           })
           .catch(err => {
-            const errorMsg = err.response.data.message;
+            const errorMsg = err.response ? err.response.data.message : err.response;
             this.setState({errorResponse: errorMsg, loading: false})
             console.log(err.response)
           })
