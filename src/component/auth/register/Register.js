@@ -42,6 +42,7 @@ class Register extends React.Component{
           invaildError: false,
           errorResponse: false,
           successResponse: false,
+          loading: false,
           formErrors: {
             companyName: '',
             firstName: "",
@@ -55,7 +56,7 @@ class Register extends React.Component{
         };
       }
       storeToLocalstorage = (data) => {
-        localStorage.setItem('userToken', data)
+        localStorage.setItem('currentUserTimeOff', JSON.stringify(data))
       }
     
       handleSubmit = e => {
@@ -71,16 +72,17 @@ class Register extends React.Component{
             email: this.state.email,
             password: this.state.password
           };
-          console.log('success');
-          axios.post('http://localhost:6004/employee/register', body).then((data) => {
-            console.log(data.data)
-            const userData = data.data.data
+          this.setState({loading: true, errorResponse: false})
+          axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
+            // console.log(data.data)
+            const userData = data.data
             this.storeToLocalstorage(userData)
+            this.setState({loading: false})
             this.props.history.push('/employee-dashboard')
           })
           .catch(err => {
             const errorMsg = err.response.data.message;
-            this.setState({errorResponse: errorMsg})
+            this.setState({errorResponse: errorMsg, loading: false})
             console.log(err.response)
           })
          
@@ -150,11 +152,10 @@ class Register extends React.Component{
                 </div>
             
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
-                    <div className="">
-                    {
-                  this.state.errorResponse ? <div className="alert alert-danger text-center">{this.state.errorResponse}</div> : ''
-                }
-                    <div className="form-group">
+                {this.state.errorResponse ? <div className="alert alert-danger text-center">{this.state.errorResponse}</div> : ''}
+                 {this.state.loading ? <h6 className="text-center">Loading...</h6> : ''}
+                <div className="row">
+                    <div className="form-group col-md-6">
                     <label >Company Name</label>
                     <input type="text" className="form-control"  placeholder="Company Name" 
                           name="companyName"  noValidate onChange={this.handleChange}/>
@@ -162,26 +163,7 @@ class Register extends React.Component{
                     <p className="text-danger">* company name is required</p> : '' } 
                     {(<span className="text-danger">{formErrors.companyName}</span>)}
                    </div>
-                   <div className="form-group">
-                    <label >First Name</label>
-                    <input type="text" className="form-control"  placeholder="First Name" 
-                          name="firstName"  noValidate onChange={this.handleChange}/>
-                        {this.state.invaildError && (this.state.firstName === null) ? 
-                    <p className="text-danger">* first name is required</p> : '' } 
-                      {formErrors.firstName.length > 0 && (
-                         <span className="text-danger">{formErrors.firstName}</span>)}
-                   </div>
-                   <div className="form-group">
-                    <label >Last Name</label>
-                    <input type="text" className="form-control"  placeholder="Last Name" 
-                          name="lastName"  noValidate onChange={this.handleChange}/>
-                    {this.state.invaildError && (this.state.lastName === null) ? 
-                    <p className="text-danger">* last name is required</p> : '' } 
-                      {formErrors.lastName.length > 0 && (
-                         <span className="text-danger">{formErrors.lastName}</span>
-              )}
-                   </div>
-                    <div className="form-group">
+                   <div className="form-group col-md-6">
                     <label >Email address</label>
                     <input type="email" className="form-control"  placeholder="Enter email" 
                           name="email"  noValidate onChange={this.handleChange}/>
@@ -191,10 +173,30 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.email}</span>
               )}
                    </div>
+                   <div className="form-group col-md-6">
+                    <label >First Name</label>
+                    <input type="text" className="form-control"  placeholder="First Name" 
+                          name="firstName"  noValidate onChange={this.handleChange}/>
+                        {this.state.invaildError && (this.state.firstName === null) ? 
+                    <p className="text-danger">* first name is required</p> : '' } 
+                      {formErrors.firstName.length > 0 && (
+                         <span className="text-danger">{formErrors.firstName}</span>)}
+                   </div>
+                   <div className="form-group col-md-6">
+                    <label >Last Name</label>
+                    <input type="text" className="form-control"  placeholder="Last Name" 
+                          name="lastName"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.lastName === null) ? 
+                    <p className="text-danger">* last name is required</p> : '' } 
+                      {formErrors.lastName.length > 0 && (
+                         <span className="text-danger">{formErrors.lastName}</span>
+              )}
+                   </div>
+  
 
 
 
-                    <div className="form-group">
+                    <div className="form-group col-md-6">
                     <label >Department</label>
                     <input type="text" className="form-control"  placeholder="Dpartment" 
                           name="department"  noValidate onChange={this.handleChange}/>
@@ -205,7 +207,7 @@ class Register extends React.Component{
               )}
                    </div>
 
-                      <div className="form-group">
+                      <div className="form-group col-md-6">
                     <label >Date Of Birth</label>
                     <input type="date" className="form-control"   
                           name="dob"  noValidate onChange={this.handleChange}/>
@@ -216,7 +218,7 @@ class Register extends React.Component{
               )}
                    </div>
 
-                  <div className="form-group">
+                  <div className="form-group col-md-6">
                     <label >Manager</label>
                     <input type="text" className="form-control" placeholder="manager"
                           name="manager"  noValidate onChange={this.handleChange}/>
@@ -226,7 +228,7 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.manager}</span>
               )}
                    </div>
-                <div className="form-group">
+                <div className="form-group col-md-6">
                     <label >Password</label>
                     <input type="password" className="form-control"  placeholder="Password" 
                                     name="password"
@@ -238,7 +240,7 @@ class Register extends React.Component{
                 <span className="text-danger">{formErrors.password}</span>
               )}
                 </div>
-                <div className="form-group">
+                <div className="form-group col-md-6">
                     <label >Country</label>
                     <select className="form-control" id="sel1">
                         <option>Nigeria</option>
@@ -247,7 +249,7 @@ class Register extends React.Component{
                         <option>South Africa</option>
                     </select>
                     </div>
-                    <div className="form-group">
+                    <div className="form-group col-md-6">
                     <label >Time Zone</label>
                     <select className="form-control" id="seld">
                         <option>West Africa/ Lagos</option>
@@ -257,7 +259,9 @@ class Register extends React.Component{
                     </select>
                     </div>
             
+                    <div className="col-md-12 text-center">
                     <button type="submit" className="btn btn-primary">Register</button>
+                    </div>
              
                     </div>
                 </form>
