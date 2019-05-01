@@ -2,6 +2,7 @@ import React from 'react';
 import './register.css'
 import Header from './../../header/Header'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -149,6 +150,9 @@ class Register extends React.Component{
               <Header isLogin={false} />
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Register Form </h1>
+                </div>
+                <div className="text-center">
+                    <h5><Link to="/admin-register">Register As An Admin</Link></h5>
                 </div>
             
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
