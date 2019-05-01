@@ -10,6 +10,7 @@ import NewAbsenceForm from './component/dashboard/new-absence/NewAbsence'
 import { BrowserRouter ,Route, Switch } from 'react-router-dom'
 import Login from './component/auth/login/Login';
 import Register from './component/auth/register/Register';
+import AdminRegister from './component/auth/admin/AdminRegister'
 import TeamView from './component/dashboard/team-view/TeamView';
 class App extends Component {
   render() {
@@ -24,6 +25,7 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
+            <Route exact path="/admin-register" component={AdminRegister} />
             <Route exact path="/employee-dashboard" component={EmployeeDashboard} />
             <Route exact path="/team-view" component={TeamView} />
             <Route exact path="/new-absence" component={NewAbsenceForm} />
