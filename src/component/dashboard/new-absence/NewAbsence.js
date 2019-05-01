@@ -3,6 +3,7 @@ import React , { Component } from 'react';
 import Swal from 'sweetalert2';
 
 import Header from './../../header/Header'
+import axios from 'axios';
 
 import './style.css';
 const typeOfTimeOff = [
@@ -54,12 +55,28 @@ class NewAbsenceForm extends Component {
     hamdleFormSubmit = () => {
         if ((!this.state.diffStartTimeStopTime.includes('-') && this.state.diffStartTimeStopTime !== '0 Days') && 
             this.state.leaveType !== '-- Select Leave Type --') {
+                const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+                const body = {
+                    "leave_type": this.state.leaveType,
+                   "from_date": this.state.startTime,
+                   "to_date": this.state.stopTime,
+               }
+                axios.post(`${process.env.REACT_APP_TimeOffURL}/leave`, body, 
+                {headers: { 'Authorization': `Bearer ${token}`}})
+                    .then((data) => {
+                        console.log(data.data);
+                        Swal.fire(
+                            'Success',
+                            'Your Leave Request Has Being Submitted',
+                            'success'
+                          )
+                    }).catch((err) => {
+                        console.log(err.response);
+                        
+                    })
+                
             console.log(this.state.diffStartTimeStopTime)
-            Swal.fire(
-                'Success',
-                'Your Leave Request Has Being Submitted',
-                'success'
-              )
+           
         } else {
             this.setState({showError: true})
         } 

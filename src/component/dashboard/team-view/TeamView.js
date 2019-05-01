@@ -1,6 +1,7 @@
 import React , { Component } from 'react'
 // import { Link } from 'react-router-dom'
 import './style.css'
+import axios from 'axios';
 
 import Header from './../../header/Header'
 
@@ -21,13 +22,39 @@ const allLeaves = [
 ]
 
 class TeamView extends Component {
+    state = {
+        allLeaveRequest: null
+    }
+    convertToshorDate = (date) => {
+        return new Date(date).toLocaleDateString();
+    }
+    componentDidMount() {
+    const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+    axios.get(`${process.env.REACT_APP_TimeOffURL}/leave`, 
+    {headers: { 'Authorization': `Bearer ${token}`}})
+        .then((data) => {
+            console.log(data.data);
+            const leaves = data.data.data
+            this.setState({allLeaveRequest: leaves})
+        })
+        .catch(err => {
+            console.log(err.response);
+        })
+    }
     render() {
         return (
         <div>          
            <Header isLogin={true} />
             <div className="container mt-3 mb-5">
             <h4>Admin Dashboard</h4>    
-            <h6 className="text-info mb-2">Leave Request To Approve Or Decline</h6>     
+            <h6 className="text-info mb-2">Leave Request To Approve Or Decline</h6> 
+            {
+                !this.state.allLeaveRequest ? 
+                <p>Loading.....</p> : 
+                <div>
+                    {
+                        !this.state.allLeaveRequest.length ? 
+                        <p>No Leave Request Available</p> : 
             <table className="table table-hover">
               <thead>
                 <tr>
@@ -40,16 +67,16 @@ class TeamView extends Component {
               </thead>
               <tbody>
                   {
-                      allLeaveRequest.map((item , index) => {
+                      this.state.allLeaveRequest.map((item , index) => {
                           return <tr key={index}>
-                          <td>{item.employee}</td>
+                          <td>{item.name}</td>
                           <td>{item.department}</td>
-                          <td>{item.DOR}</td>
-                          <td>{item.leavedate}</td>
-                          <td>{item.type}</td>
+                          <td>{this.convertToshorDate(item.date_created)}</td>
+                          <td>from {this.convertToshorDate(item.from_date)} to {this.convertToshorDate(item.to_date)}</td>
+                          <td>{item.leave_type}</td>
                           <td>
-                              <button className="btn btn-success mr-2">Approve</button>
-                              <button className="btn btn-danger">Decline</button>
+                              <button className="btn btn-success btn-sm mr-2">Approve</button>
+                              <button className="btn btn-danger btn-sm">Decline</button>
                           </td>
                         </tr>
                       })
@@ -58,6 +85,10 @@ class TeamView extends Component {
               </tbody>
             </table>
           
+                    }
+                </div>
+            }    
+            
           <h6 className="text-info mt-5 mb-2"> All Leaves</h6>
           <table className="table table-hover mb-5 px-4">
               <thead>
