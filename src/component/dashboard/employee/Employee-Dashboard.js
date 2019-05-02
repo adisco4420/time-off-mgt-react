@@ -2,6 +2,7 @@ import React , { Component } from 'react';
 import Calendar from 'react-calendar';
 import './employee.css';
 import Header from './../../header/Header'
+import axios from "axios";
 
 // Render the Calendar
 
@@ -33,12 +34,27 @@ const MoreCalendarDate = [
 let userInfos = ''
 class EmployeeDashboard extends Component {
     
-    componentDidMount() {
+   async componentDidMount() {
         if (!localStorage.getItem('currentUserTimeOff')) {
             this.props.history.push('/login');
         } else {
-            userInfos = JSON.parse(localStorage.getItem('currentUserTimeOff')).result;
-            this.setState({userInfo: userInfos})
+            const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_TimeOffURL}/employee/profile`, {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  });
+                  console.log(res.data);
+                this.setState({userInfo: res.data.data})
+            } catch (error) {
+                if (error.response.status === 401) return  this.props.history.push('/login');
+                console.log(error.response);
+            }
+            
+       
+            
+          
             // console.log(userInfos);
         }
     }

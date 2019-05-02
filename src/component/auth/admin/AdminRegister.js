@@ -1,8 +1,8 @@
 import React from 'react';
-import './register.css'
+import './admin.css'
 import Header from './../../header/Header'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import {Link } from 'react-router-dom';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -17,14 +17,13 @@ const emailRegex = RegExp(
     Object.values(formErrors).forEach(val => {
       val.length > 0 && (valid = false);
     });
-  
     // validate the form was filled out
     Object.values(rest).forEach(val => {
       val === null && (valid = false);
     });
     return valid;
   };
-class Register extends React.Component{
+class AdminRegister extends React.Component{
     constructor(props) {
         super(props);
         this.errorSate = {
@@ -40,6 +39,7 @@ class Register extends React.Component{
           dob: null,
           manager: null,
           password: null,
+          licenseKey: null,
           invaildError: false,
           errorResponse: false,
           successResponse: false,
@@ -52,7 +52,8 @@ class Register extends React.Component{
             department: '',
             dob: '',
             manager: '',
-            password: ""
+            password: "",
+            licenseKey: ""
           }
         };
       }
@@ -71,7 +72,8 @@ class Register extends React.Component{
             department: this.state.department,
             manager: this.state.manager,
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            licenseKey: this.state.licenseKey
           };
           this.setState({loading: true, errorResponse: false})
           axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
@@ -123,6 +125,11 @@ class Register extends React.Component{
           ? "department must be up to 3 characters (alphabet only)"
           : "";
         break;  
+        case "licenseKey":
+        formErrors.licenseKey =  value.length < 3 
+          ? "invalid license key"
+          : "";
+        break;  
         case "dob":
         formErrors.dob =  value.length < 3
         ? "date of birth must be up to 3 characters (alphabet only)"
@@ -149,10 +156,10 @@ class Register extends React.Component{
             <div>
               <Header isLogin={false} />
                 <div className="jumbotron text-center bg-teal ">
-                    <h1>Register Form </h1>
+                    <h1>Admin Register Form </h1>
                 </div>
                 <div className="text-center">
-                    <h5><Link to="/admin-register">Register As An Admin</Link></h5>
+                    <h5><Link to="/register">Register As A User</Link></h5>
                 </div>
             
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
@@ -196,10 +203,6 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.lastName}</span>
               )}
                    </div>
-  
-
-
-
                     <div className="form-group col-md-6">
                     <label >Department</label>
                     <input type="text" className="form-control"  placeholder="Dpartment" 
@@ -262,7 +265,16 @@ class Register extends React.Component{
                         <option>India/New Delhi</option>
                     </select>
                     </div>
-            
+                    <div className="form-group col-md-12">
+                    <label >License Key</label>
+                    <input type="text" className="form-control"  placeholder="License Key" 
+                          name="licenseKey"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.licenseKey === null) ? 
+                    <p className="text-danger">* license key is required</p> : '' } 
+                      {formErrors.licenseKey.length > 0 && (
+                         <span className="text-danger">{formErrors.licenseKey}</span>
+              )}
+                   </div>
                     <div className="col-md-12 text-center">
                     <button type="submit" className="btn btn-primary">Register</button>
                     </div>
@@ -274,4 +286,4 @@ class Register extends React.Component{
         )
     }
 }
-export default Register;
+export default AdminRegister;

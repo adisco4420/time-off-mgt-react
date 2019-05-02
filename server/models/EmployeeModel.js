@@ -46,6 +46,9 @@ const EmployeeSchema = new mongoose.Schema({
     minlength: 6,
     select: false
   },
+  isAdmin: {
+    type: String
+  }
 });
 
 // Model which provides us with an interface for interacting with our data
