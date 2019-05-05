@@ -13,62 +13,78 @@ const typeOfTimeOff = [
     {name: 'Marriage Purpose', days: 7},
     // {name: 'Attend Meetup', days: 3},
 ]
-const requests = [
-    {name: 'Medical Checkup', date: '12/03/2019'},
-    {name: 'Maternity Leave', date: '23/02/2019'},
-    {name: 'Vacation', date: '14/01/2019'},
-]
-const allAbsence = [
-{type: 'Vacation', days: 3, startDate: '01/02/2019', stopDate: '04/02/2019', approvalBy: 'James Bond', status: 'Approved'},
-{type: 'Attend Meetup', days: 5, startDate: '11/03/2019', stopDate: '16/03/2019', approvalBy: 'Thomas Edison', status: 'Approved'},
-{type: 'Christmas Break', days: 4, startDate: '23/03/2018', stopDate: '27/02/2018', approvalBy: 'Mayowa', status: 'Approved'}
-]
-const calendarDate = [
-    new Date(2019 , 0, 9), new Date(2019, 1, 23), new Date(2018, 2, 25), new Date(2019, 3, 11)
-]
-const MoreCalendarDate = [
-    new Date(2019 , 0, 9), new Date(2019, 1, 23), new Date(2018, 2, 25), new Date(2019, 3, 11),
-    new Date(2019 , 4, 2), new Date(2019, 5, 13), new Date(2018, 6, 25), new Date(2019, 7, 21),
-    new Date(2019 , 8, 16), new Date(2019, 9, 8), new Date(2018, 10, 30), new Date(2019, 11, 24)
-]
-let userInfos = ''
+
 class EmployeeDashboard extends Component {
-    
+    state = {
+        showMore: false,
+        showMoreText: 'Show More',
+        userInfo: '',
+        allLeaveRequest: '',
+        availableLeaveRequest: ''
+    }
+    convertToshorDate = (date) => {
+        return new Date(date).toLocaleDateString();
+    }
+    getStatusColor(status) {
+        switch (status) {
+            case 'declined':
+                return 'badge-danger'
+            case 'approved': 
+                return 'badge-success'
+            default:
+                return 'badge-warning'
+        }
+    }
+    getAvailableRequest(requests) {
+        if (requests) {
+           const leave =  requests.filter(item => item.status === 'pending')
+           this.setState({availableLeaveRequest: leave})
+        }
+    }
    async componentDidMount() {
         if (!localStorage.getItem('currentUserTimeOff')) {
             this.props.history.push('/login');
         } else {
             const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
-            try {
-                const res = await axios.get(`${process.env.REACT_APP_TimeOffURL}/employee/profile`, {
-                    headers: {
-                      Authorization: `Bearer ${token}`,
-                    },
-                  });
-                  console.log(res.data);
-                this.setState({userInfo: res.data.data})
-            } catch (error) {
-                if (error.response.status === 401) return  this.props.history.push('/login');
-                console.log(error.response);
-            }
-            
-       
-            
-          
-            // console.log(userInfos);
+            this.getUserProfile(token)
+            this.getListOfLeaveRequest(token)
         }
     }
-    state = {
-        showMore: false,
-        showMoreText: 'Show More',
-        userInfo: ''
+   async getUserProfile(token) {
+        try {
+            const res = await axios.get(`${process.env.REACT_APP_TimeOffURL}/employee/profile`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            this.setState({userInfo: res.data.data})
+            
+        } catch (error) {
+            if (error.response.status === 401) return  this.props.history.push('/login');
+            console.log(error.response);
+        }
     }
+
+   async getListOfLeaveRequest(token) {
+        if (token) {
+            axios.get(`${process.env.REACT_APP_TimeOffURL}/leave`, 
+            {headers: { 'Authorization': `Bearer ${token}`}})
+                .then((data) => {
+                    const leaves = data.data.data
+                    this.setState({allLeaveRequest: leaves})
+                    this.getAvailableRequest(leaves)
+                })
+                .catch(err => {
+                    console.log(err.response);
+                })
+        }
+    }
+
    handeleShowMore = () => {
         this.setState({
             showMore: !this.state.showMore,
             showMoreText: 'Show Less'
         })
-        
     }
     render(){
         return(
@@ -77,17 +93,22 @@ class EmployeeDashboard extends Component {
      
                 <div  className="ml-3 mt-3">
                 <h3>Empolyee Dashboard</h3>
-                <h5>{this.state.userInfo.firstName} {this.state.userInfo.lastName}</h5>
                 </div>
 
                 <div className="container">
+                    <div className="row">
+                        <div className="col-md-12 text-center">
+                        <img style={{width: '10%'}} src="https://image.flaticon.com/icons/svg/145/145850.svg" alt="avatar" />
+                        <h5>{this.state.userInfo.firstName} {this.state.userInfo.lastName}</h5>
+                        </div>
+                    </div>
                     <h3 className="text-center">Statistics</h3>
                     <div className="row p mt-5 statistics">
                         <div className="col-md-3 sta">
                         <div className="card">
                             <div className="card-header bg-primary text-light">Days Remaining</div>
                             <div className="card-body">
-                                <h1>10 Days</h1>
+                                <h1>{this.state.userInfo.numberOfLeave} Days</h1>
                                 <h6>Out Of 20 Working Days</h6>
                             </div> 
                         </div>
@@ -115,16 +136,23 @@ class EmployeeDashboard extends Component {
                         <div className="card">
                             <div className="card-header bg-primary text-light">Available Request</div>
                             <div className="card-bod">
-                            <ul className="list-group"> 
+                            {
+                                this.state.availableLeaveRequest && this.state.availableLeaveRequest.length ?
+                                <ul className="list-group"> 
                                 {
-                                requests.map(item => {
-                                        return <div key={item.date}>
-                                            <li className="list-group-item"> {item.name} 
-                                                <span className="badge badge-primary float-right ">{item.date}</span></li>
+                                this.state.availableLeaveRequest.map((item, index) => {
+                                        return <div key={index}>
+                                            <li className="list-group-item"> {item.leave_type} 
+                                                <span className="badge badge-primary float-right ">
+                                                {this.convertToshorDate(item.date_created)}
+                                                </span>
+                                            </li>
                                             </div>
                                 })
                                 }
-                            </ul>
+                            </ul> : <h6 className="mt-5 text-center">No Pending leave request</h6>
+                            }
+                   
                             </div> 
                         </div>
                       </div>
@@ -145,60 +173,63 @@ class EmployeeDashboard extends Component {
 
                     </div>
                     <h2 className="text-center mt-4 mb-3 ">
-                    Calendar  <button onClick={this.handeleShowMore} className="btn btn-primary">{
-                        !this.state.showMore ? 'Show More' : 'Show Less'
-                    }</button> </h2>
-                    <div className="row">
+                    Calendar   </h2>
+                    <div className="row align-content-center">
                    
-                    { !this.state.showMore ?
-                        calendarDate.map((item, index) => {
-                            return <div key={index} className="col-md-3 ">
+                    { this.state.allLeaveRequest && this.state.allLeaveRequest.length ?
+                        this.state.allLeaveRequest.map((item, index) => {
+                            return <div key={index} className="col-md-3">
                             <Calendar 
-                                value={item}
+                                value={new Date(item.from_date)}
                                 />
                             </div>  
-                        }) : MoreCalendarDate.map((item, index) => {
-                            return <div key={index} className="col-md-3 mb-2">
-                            <Calendar
-                                value={item}
-                                />
-                            </div>  
-                        })
+                        }) :
+                        <h6>No Calendar</h6>
+                      
                     }
       
-
                     </div>
-                        
-
                     <h3 className="text-center mt-3">All Absenses</h3>
                     <div className="row mb-5 py-3">
-                        <div className="col-12">
-                        <table className="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Number Of Days</th>
-                                <th>Date</th>
-                                <th>Approved By</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                          
+                        <div className="col-md-12 text-center">
+                        {
+                            !this.state.allLeaveRequest ? <div>
+                                <h6>Loading <i className="fa fa-spinner"></i></h6>
+                            </div> : 
+                            <React.Fragment> 
                                 {
-                                    allAbsence.map((item, index) => {
-                                        return <tr key={index}>
-                                        <td>{item.type}</td>
-                                        <td>{item.days}</td>
-                                        <td>From: {item.startDate} To: {item.stopDate}</td>
-                                        <td>{item.approvalBy}</td>
-                                        <td>{item.status}</td>
+                                    !this.state.allLeaveRequest.length ? 
+                                    <h6>No  Available Leave Request</h6>  :
+                                    <table className="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Date Requested</th>
+                                        <th>Leave Date</th>
+                                        <th>Approved By</th>
+                                        <th>Status</th>
                                     </tr>
-                                    })
+                                    </thead>
+                                    <tbody>
+                                  
+                                        {
+                                            this.state.allLeaveRequest.map((item, index) => {
+                                                return <tr key={index}>
+                                                <td>{item.leave_type}</td>
+                                                <td>{this.convertToshorDate(item.date_created)}</td>
+                                                <td>{this.convertToshorDate(item.from_date)} - {this.convertToshorDate(item.to_date)}</td>
+                                                <td>{item.approved_by ? item.approved_by : '--'}</td>
+                                                <td> <span className={`badge ${this.getStatusColor(item.status)} text-light bgd`}>{item.status}</span> </td>
+                                            </tr>
+                                            })
+                                        }
+                           
+                                    </tbody>
+                            </table>
                                 }
-                   
-                            </tbody>
-                        </table>
+                           </React.Fragment>
+                        }
+                
                         </div>
                     </div>
                

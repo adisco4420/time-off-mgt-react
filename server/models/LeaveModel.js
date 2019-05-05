@@ -31,6 +31,14 @@ const LeaveSchema = new mongoose.Schema({
     department: {
         type: String,
         required: true
+    },
+    approved_by: {
+        type: String
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'declined'],
+        required: true
     }
 });
 

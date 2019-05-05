@@ -13,7 +13,6 @@ const emailRegex = RegExp(
     let valid = true;
   
     // validate form errors being empty
-    console.log(formErrors);
     Object.values(formErrors).forEach(val => {
       val.length > 0 && (valid = false);
     });
@@ -65,8 +64,8 @@ class AdminRegister extends React.Component{
         e.preventDefault(); 
         if (formValid(this.state)) {
           const body = {
-            firstName: this.state.companyName,
-            companyName: this.state.firstName,
+            firstName: this.state.firstName,
+            companyName: this.state.companyName,
             lastName: this.state.lastName,
             dob: this.state.dob,
             department: this.state.department,
@@ -78,8 +77,8 @@ class AdminRegister extends React.Component{
           this.setState({loading: true, errorResponse: false})
           axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
             // console.log(data.data)
-            const userData = data.data.data
-            this.storeToLocalstorage(userData)
+            const token = data.data.data.token
+            this.storeToLocalstorage({token:token});
             this.setState({loading: false})
             this.props.history.push('/employee-dashboard')
           })

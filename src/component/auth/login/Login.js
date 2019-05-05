@@ -53,9 +53,8 @@ class Login extends React.Component{
           this.setState({loading: true, errResponse: false});
           axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/login`, user)
             .then(data => {
-              const result = data.data;
-              // console.log(result);
-              this.storeToLocalstorage(result);
+              const result = data.data.token;
+              this.storeToLocalstorage({token:result});
               this.setState({loading: false});
               this.props.history.push('/employee-dashboard')
             })

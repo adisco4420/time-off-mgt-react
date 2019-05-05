@@ -12,7 +12,7 @@ router.post('/register', async function(req, res) {
   let isAdmin = false;
   let callDB = true;
   if (req.body.licenseKey) {
-    if (req.body.licenseKey === 'LevelUpAdmin') {
+    if (req.body.licenseKey === process.env.ADMIN_KEY) {
       isAdmin = true;
       callDB = true
     } else {
@@ -25,7 +25,8 @@ router.post('/register', async function(req, res) {
       req.body.password = await bcrypt.hash(req.body.password, 10);
       const employee = await EmployeeModel.create({
         isAdmin,
-        ...req.body
+        ...req.body,
+        numberOfLeave: 20
       });
       const token = jwt.sign({id: employee._id}, SECRET, {expiresIn: '1h'});
       const result = employee.toJSON();
@@ -59,12 +60,11 @@ router.post('/login', async function (req, res) {
     
     const result = employess.toJSON();
     delete result['password'];
-    const token = jwt.sign({id: employess.id}, SECRET);
+    const token = jwt.sign({id: employess.id}, SECRET, {expiresIn: '1h'});
     res.status(200).json({result, token})
 
   } catch (error) {
       res.status(404).json({status: 'error', message: 'error occured'})
-    // console.log(error);
   }
 })
 // get employee profile

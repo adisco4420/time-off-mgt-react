@@ -19,3 +19,7 @@
 .col-md-3 .react-calendar {
     max-height: 340px !important;
 }
+.bgd{
+    border-radius: 0px;
+    padding: 4% 7%;
+}
