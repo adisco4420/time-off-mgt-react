@@ -1,10 +1,9 @@
 import React , { Component } from 'react';
-// import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import Header from './../../header/Header'
 import axios from 'axios';
-
+import dateFunction from '../function/date';
 import './style.css';
 const typeOfTimeOff = [
     {name: '-- Select Leave Type --', day: 1},
@@ -25,107 +24,86 @@ class NewAbsenceForm extends Component {
         leaveType: '',
         startTime: date,
         stopTime: date,
-        diffStartTimeStopTime: '0 Days',
+        FromDay: 'All Day',
+        ToDay: 'All Day',
+        comment: '',
+        diffStartTimeStopTime: 0,
         showError: false
     }
     handleStartTime = e => {
         let startTimeValue = e.target.value;
         this.setState({startTime: startTimeValue})
-        const start = startTimeValue.replace(/-/g, '');
-        const stop = this.state.stopTime.replace(/-/g, '');
-        let diff = stop - start
-        diff = this.calculateDuration(diff)
-        this.setState({diffStartTimeStopTime: `${diff}`})
-        console.log(this.state.diffStartTimeStopTime)
+        let diff = dateFunction(startTimeValue, this.state.stopTime)
+        this.setState({diffStartTimeStopTime: diff})
     }
+
     handleStopTime = e => {
         let stopTimeValue = e.target.value;
         this.setState({stopTime: stopTimeValue})
-        const start = this.state.startTime.replace(/-/g, '');
-        const stop = stopTimeValue.replace(/-/g, '');
-        let diff = stop - start
-        diff = this.calculateDuration(diff)
-        this.setState({diffStartTimeStopTime: `${diff}`})
-        console.log(diff)
+        let diff = dateFunction(this.state.startTime, stopTimeValue)
+        this.setState({diffStartTimeStopTime: diff})
+    }
+    handleDayChange = e => {
+        const {name, value} = e.target
+        this.setState({[name]: value})
     }
     handeleLeavetype = e => {
-        console.log(e.target.value)
         this.setState({leaveType: e.target.value})
     }
+    handleComment = e => {
+        this.setState({comment: e.target.value})
+    }
     hamdleFormSubmit = () => {
-        if ((!this.state.diffStartTimeStopTime.includes('-') && this.state.diffStartTimeStopTime !== '0 Days') && 
-            this.state.leaveType !== '-- Select Leave Type --') {
+        if ((this.state.diffStartTimeStopTime !== 0) && 
+            (this.state.leaveType !== '-- Select Leave Type --' && this.state.leaveType !== '')) {
                 const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+                const comment = this.state.comment.length ? this.state.comment : 'No Comment'
                 const body = {
                     "leave_type": this.state.leaveType,
                    "from_date": this.state.startTime,
                    "to_date": this.state.stopTime,
-               }
+                   "comment": comment
+               }   
                 axios.post(`${process.env.REACT_APP_TimeOffURL}/leave`, body, 
                 {headers: { 'Authorization': `Bearer ${token}`}})
                     .then((data) => {
-                        console.log(data.data);
                         Swal.fire(
                             'Success',
                             'Your Leave Request Has Being Submitted',
                             'success'
-                          )
+                          ).then(() => {
+                            this.clearAllField()
+                          })
                     }).catch((err) => {
+                        if (err && err.response && err.response.staus !== 500) {
+                            Swal.fire(
+                                'Error',
+                                `${err.response.data.message}`,
+                                'error'
+                              )
+                        }
                         console.log(err.response);
                         
                     })
-                
-            console.log(this.state.diffStartTimeStopTime)
            
         } else {
             this.setState({showError: true})
         } 
-        if (this.state.diffStartTimeStopTime === '0 Days') {
+        if (this.state.diffStartTimeStopTime === 0) {
             this.setState({showError: true})
         } 
     } 
-    calculateDuration = (days) => {
-        let not = undefined;
-          let value = days
-          let result = days
-          let day , month, weeks
-          if(value >= 30) {
-            month = value / 30;
-            month = Math.floor(month)
-            value = value % 30
-          }if (value >= 7) {
-              day = value % 7;
-              weeks = value / 7;
-              weeks = Math.floor(weeks);
-          } else {
-            day = value
-          }
-          if(month !== not && (weeks === not && day === not) ) {
-             result = `${month} Month`
-          }
-          if((month === not && day === 0) && weeks !== not ) {
-             result = `${weeks} Week`
-          }
-          console.log(day)
-          if(day !== not && (month === not && weeks ===not )) {
-            result = `${day} day`
-          }
-          if(month !== not && weeks !== not && day !== not) {
-            result = `${month} Month ${weeks} Week ${day} Day`
-          }
-            console.log(weeks)
-          if(month !== not && weeks !== not && day === 0) {
-            result = `${month} Month ${weeks} Week`
-          }
-          if(month !== not && weeks === not && day !== not ) {
-            result = `${month} Month ${day} Day`
-          }
-          if (month === not && weeks && day) {
-            result = `${weeks} Week ${day} Day`
-          }
-          // result = `${month} Month ${weeks} Week ${day} Day`
-          return result
-      }
+    clearAllField = () => {
+        document.getElementById('leaveType').value = '-- Select Leave Type --'
+        this.setState({
+            leaveType: '',
+            startTime: date,
+            stopTime: date,
+            diffStartTimeStopTime: 0,
+            showError: false
+        })
+    } 
+ 
     render() {
         return(
             <div>
@@ -139,8 +117,8 @@ class NewAbsenceForm extends Component {
     <div className="row">
         <div className="col-12">
             <div className="form-group">
-                    <label htmlFor="exampleFormControlSelect1"><h6>Leave Type</h6></label>
-                    <select onClick={this.handeleLeavetype} className="form-control" id="exampleFormControlSelect1">
+                    <label htmlFor="leaveType"><h6>Leave Type</h6></label>
+                    <select onClick={this.handeleLeavetype} className="form-control" id="leaveType">
                     {
                         typeOfTimeOff.map((item, index) => {
                             return <option key={index}>{item.name}</option>
@@ -163,7 +141,7 @@ class NewAbsenceForm extends Component {
     <h6>From:</h6>
     <div className="row">
         <div className="col-4">
-            <select className="form-control">
+            <select name="FromDay" onClick={this.handleDayChange} className="form-control">
                 <option>All day</option>
                 <option>Morning</option>
                 <option>Afternoon</option>
@@ -183,7 +161,7 @@ class NewAbsenceForm extends Component {
     <div className="row">
    
         <div className="col-4">
-            <select className="form-control">
+            <select name="ToDay" onClick={this.handleDayChange} className="form-control">
                 <option>All day</option>
                 <option>Morning</option>
                 <option>Afternoon</option>
@@ -203,10 +181,10 @@ class NewAbsenceForm extends Component {
     <div className="row">
         <div className="col-12">
             <input 
-                value={this.state.diffStartTimeStopTime.includes('-') ? '0 Days' : this.state.diffStartTimeStopTime } 
+                value={this.state.diffStartTimeStopTime === 0 ? '0 Day' : `${this.state.diffStartTimeStopTime} Day(s)` } 
                 className="form-control" disabled />
             {
-                ((this.state.diffStartTimeStopTime === '0 Days' || this.state.diffStartTimeStopTime.includes('-')) 
+                ((this.state.diffStartTimeStopTime === 0) 
                 && this.state.showError) ? 
                 <span className="text-danger">invalid duration must be more than 0 Days</span> : '' 
             }
@@ -217,7 +195,7 @@ class NewAbsenceForm extends Component {
         <div className="col-12">
             <div className="form-group">
                 <label ><h6>Comment (Optional)</h6></label>
-                <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea onChange={this.handleComment} className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
              </div>
         </div>
     </div>
