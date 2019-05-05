@@ -1,11 +1,35 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import './HeaderStyle.css';
+import axios from 'axios';
 
 class Header extends Component {
+    state = {
+        userInfo: ''
+    }
     handleLogout = () => {
         localStorage.removeItem('currentUserTimeOff')
         this.props.history.push('/login')
+    }
+   async componentWillMount() {
+       if (this.props.isLogin) {
+            if (!localStorage.getItem('currentUserTimeOff')) {
+                this.props.history.push('/login');
+            } else {
+                const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_TimeOffURL}/employee/profile`, {
+                        headers: {
+                        Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    this.setState({userInfo: res.data.data})
+                } catch (error) {
+                    if (error.response.status === 401) return  this.props.history.push('/login');
+                    console.log(error.response);
+                }
+            }
+}
     }
     
   render() {
@@ -31,12 +55,15 @@ class Header extends Component {
                    <Link className="nav-link text-light" to="/employee-dashboard">
                        Employee Dashboard 
                    </Link>
-                    </li>
-                    <li className="nav-item active ">
+                    </li> {
+                        this.state.userInfo && this.state.userInfo.isAdmin ? 
+                        <li className="nav-item active ">
                         <Link className="nav-link text-light" to="/team-view">
                             Team View 
                         </Link>
-                    </li>
+                    </li> : ''
+                    }
+              
                     <li className="nav-item active ">
                         <Link className="nav-link bg-light text-primary" to="/new-absence">
                             New Absence
