@@ -47,7 +47,11 @@ const EmployeeSchema = new mongoose.Schema({
     select: false
   },
   isAdmin: {
-    type: String
+    type: Boolean
+  },
+  numberOfLeave: {
+    type: Number,
+    required: true
   }
 });
 
