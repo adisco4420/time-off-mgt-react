@@ -20,8 +20,6 @@ router.post('/', async function(req, res) {
       data: {writer: result, token},
     });
   } catch (err) {
-    // console.log(err);
-
     res.status(500).json({
       status: 'error',
       message: 'An error occured while creating your account 😭',
@@ -89,7 +87,6 @@ router.post("/login", async function(req, res) {
     const token = jwt.sign({ id: writer.id }, SECRET);
     res.json({ token });
   } catch (error) {
-    console.log(error);
     res.status(500).json({status: "error", message:error})
   }
 });
