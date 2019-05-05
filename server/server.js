@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 // Connect to MongoDB
 mongoose
-  .connect(process.env.LOCAL_MONGO, { useNewUrlParser: true })
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
     console.log('✌🏾 Successfully connected to MongoDB');
   })
