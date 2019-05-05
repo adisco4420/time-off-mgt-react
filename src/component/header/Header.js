@@ -25,8 +25,8 @@ class Header extends Component {
                     });
                     this.setState({userInfo: res.data.data})
                 } catch (error) {
-                    if (error.response.status === 401) return  this.props.history.push('/login');
-                    console.log(error.response);
+                    this.props.history.push('/login');
+                    console.log(error);
                 }
             }
 }
