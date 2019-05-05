@@ -4,18 +4,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import './HomeStyle.css'
 import Header from '../header/Header';
 
-import axios from 'axios';
-
 class Home extends Component { 
-    componentDidMount() {
-        axios.get(`https://jsonplaceholder.typicode.com/users`)
-          .then(res => {
-            const persons = res.data;
-            console.log(persons)
-            // this.setState({ persons });
-          })
-          .catch(err => console.log(err))
-      }
     render() {
         return (
             <div>
@@ -32,7 +21,6 @@ class Home extends Component {
                 <p>Tested And Trusted Time Off Application</p>
                 <p className="lead">
                     <Link className="btn btn-primary btn-lg" to="/register">Sign Up</Link>
-
                 </p>
             </div>
             <div className="container mb-10">    
