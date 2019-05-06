@@ -18,14 +18,10 @@ mongoose
     console.log('An error occured while conencting to MongoDB', err);
   });
 
-
 // Use express static
 app.use(express.static(path.join(__dirname, '../build')));
 
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../build/index.html'));
-});
 app.use(cors());
 
 // Add middlewares for parsing JSON and urlencoded data and populating `req.body`
@@ -36,6 +32,11 @@ app.use(express.json());
 app.use('/employee', EmployeeRoute);
 app.use('/leave', LeaveRoute);
 
+
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'));
+});
 
 app.listen(port).on('listening', () => {
   console.log('We are live on ' + port);
