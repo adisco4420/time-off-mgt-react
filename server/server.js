@@ -3,24 +3,18 @@ const mongoose = require('mongoose');
 const path = require('path')
 const cors = require('cors');
 const EmployeeRoute = require('./routes/EmployeeRoute');
-const LeaveRoute = require('./routes/LeaveRoute');
 const port = process.env.PORT || 6004; 
 const app = express();
-const dotenv = require('dotenv');
-dotenv.config();
+
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+  .connect('mongodb://localhost:27017/timeoff')
   .then(() => {
     console.log('✌🏾 Successfully connected to MongoDB');
   })
   .catch(err => {
     console.log('An error occured while conencting to MongoDB', err);
   });
-
-// Use express static
-app.use(express.static(path.join(__dirname, '../build')));
-
 
 app.use(cors());
 
@@ -29,14 +23,14 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 
-app.use('/employee', EmployeeRoute);
-app.use('/leave', LeaveRoute);
+// Use express static
+app.use(express.static(path.join(__dirname, '../build')));
 
 
-
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../build/index.html'));
 });
+app.use('/employee', EmployeeRoute);
 
 app.listen(port).on('listening', () => {
   console.log('We are live on ' + port);
