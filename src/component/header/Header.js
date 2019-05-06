@@ -1,20 +1,35 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './HeaderStyle.css';
+import axios from 'axios';
 
 class Header extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            koloLogin: true,
-        }
-        console.log(this.state.koloLogin)
-        console.log(this.props)
+    state = {
+        userInfo: ''
     }
     handleLogout = () => {
-        localStorage.clear('currentUser')
-        this.setState({koloLogin: !this.state.koloLogin})
-       console.log(this.state.koloLogin)
+        localStorage.removeItem('currentUserTimeOff')
+        this.props.history.push('/login')
+    }
+   async componentWillMount() {
+       if (this.props.isLogin) {
+            if (!localStorage.getItem('currentUserTimeOff')) {
+                this.props.history.push('/login');
+            } else {
+                const token = JSON.parse(localStorage.getItem('currentUserTimeOff')).token;
+                try {
+                    const res = await axios.get(`${process.env.REACT_APP_TimeOffURL}/employee/profile`, {
+                        headers: {
+                        Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    this.setState({userInfo: res.data.data})
+                } catch (error) {
+                    this.props.history.push('/login');
+                    console.log(error);
+                }
+            }
+}
     }
     
   render() {
@@ -40,12 +55,15 @@ class Header extends Component {
                    <Link className="nav-link text-light" to="/employee-dashboard">
                        Employee Dashboard 
                    </Link>
-                    </li>
-                    <li className="nav-item active ">
+                    </li> {
+                        this.state.userInfo && this.state.userInfo.isAdmin ? 
+                        <li className="nav-item active ">
                         <Link className="nav-link text-light" to="/team-view">
                             Team View 
                         </Link>
-                    </li>
+                    </li> : ''
+                    }
+              
                     <li className="nav-item active ">
                         <Link className="nav-link bg-light text-primary" to="/new-absence">
                             New Absence
@@ -84,4 +102,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);

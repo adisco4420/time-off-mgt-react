@@ -34,6 +34,7 @@ class Login extends React.Component{
           password: null,
           invalidError : false,
           errResponse: false,
+          loading: false,
           formErrors: {
             email: "",
             password: ""
@@ -41,24 +42,25 @@ class Login extends React.Component{
         };
       }
       storeToLocalstorage = (data) => {
-        localStorage.setItem('userToken', data)
+        localStorage.setItem('currentUserTimeOff', JSON.stringify(data))
       }
     
       handleSubmit = e => {
         e.preventDefault();
-    
         if (formValid(this.state)) {
           let user = {email: this.state.email, password: this.state.password}
           // window.location.replace('employee-dashboard')
-          axios.post('http://localhost:6004/employee/login', user)
+          this.setState({loading: true, errResponse: false});
+          axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/login`, user)
             .then(data => {
-              const result = data.data.data;
-              this.storeToLocalstorage(result);
+              const result = data.data.token;
+              this.storeToLocalstorage({token:result});
+              this.setState({loading: false});
               this.props.history.push('/employee-dashboard')
             })
             .catch(err => {
               const errorMsg = err.response ? err.response.data.message : err.response;
-              this.setState({errResponse: errorMsg})
+              this.setState({errResponse: errorMsg, loading: false})
               console.log(errorMsg);
             });
 
@@ -100,10 +102,11 @@ class Login extends React.Component{
                 </div>
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
                     <div className="">
-                    {
-                  this.state.errResponse ? <div className="alert alert-danger text-center">
-                  {this.state.errResponse}</div> : ''
-                }
+                   
+                    {this.state.errResponse ? <div className="alert alert-danger text-center">
+                  {this.state.errResponse}</div> : ''}
+                  {this.state.loading ? <h6 className="text-center">Loading...</h6> : ''}
+                
                     <div className="form-group">
                     <label >Email address</label>
                     <input type="email" className="form-control"  placeholder="Enter email" 
