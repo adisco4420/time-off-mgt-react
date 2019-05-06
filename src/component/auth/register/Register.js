@@ -2,7 +2,6 @@ import React from 'react';
 import './register.css'
 import Header from './../../header/Header'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -13,6 +12,7 @@ const emailRegex = RegExp(
     let valid = true;
   
     // validate form errors being empty
+    console.log(formErrors);
     Object.values(formErrors).forEach(val => {
       val.length > 0 && (valid = false);
     });
@@ -24,14 +24,6 @@ const emailRegex = RegExp(
     return valid;
   };
 class Register extends React.Component{
- async componentDidMount() {
-    try {
-      const res = await axios.get('https://restcountries.eu/rest/v2/all')    
-      this.setState({listOfCountry: res.data})
-    } catch (error) {
-      console.log(error);
-    }
-  }
     constructor(props) {
         super(props);
         this.errorSate = {
@@ -49,9 +41,7 @@ class Register extends React.Component{
           password: null,
           invaildError: false,
           errorResponse: false,
-          listOfCountry: null,
           successResponse: false,
-          loading: false,
           formErrors: {
             companyName: '',
             firstName: "",
@@ -65,15 +55,15 @@ class Register extends React.Component{
         };
       }
       storeToLocalstorage = (data) => {
-        localStorage.setItem('currentUserTimeOff', JSON.stringify(data))
+        localStorage.setItem('userToken', data)
       }
     
       handleSubmit = e => {
         e.preventDefault(); 
         if (formValid(this.state)) {
           const body = {
-            firstName: this.state.firstName,
-            companyName: this.state.companyName,
+            firstName: this.state.companyName,
+            companyName: this.state.firstName,
             lastName: this.state.lastName,
             dob: this.state.dob,
             department: this.state.department,
@@ -81,17 +71,16 @@ class Register extends React.Component{
             email: this.state.email,
             password: this.state.password
           };
-          this.setState({loading: true, errorResponse: false})
-          axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
-            // console.log(data.data)
-            const token = data.data.data.token
-            this.storeToLocalstorage({token:token});
-            this.setState({loading: false})
+          console.log('success');
+          axios.post('http://localhost:6004/employee/register', body).then((data) => {
+            console.log(data.data)
+            const userData = data.data.data
+            this.storeToLocalstorage(userData)
             this.props.history.push('/employee-dashboard')
           })
           .catch(err => {
-            const errorMsg = err.response ? err.response.data.message : err.response;
-            this.setState({errorResponse: errorMsg, loading: false})
+            const errorMsg = err.response.data.message;
+            this.setState({errorResponse: errorMsg})
             console.log(err.response)
           })
          
@@ -159,15 +148,13 @@ class Register extends React.Component{
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Register Form </h1>
                 </div>
-                <div className="text-center">
-                    <h5><Link to="/admin-register">Register As An Admin</Link></h5>
-                </div>
             
                 <form className="container mb-5" onSubmit={this.handleSubmit} noValidate style={{padding: '2% 20%' }}>
-                {this.state.errorResponse ? <div className="alert alert-danger text-center">{this.state.errorResponse}</div> : ''}
-                 {this.state.loading ? <h6 className="text-center">Loading...</h6> : ''}
-                <div className="row">
-                    <div className="form-group col-md-6">
+                    <div className="">
+                    {
+                  this.state.errorResponse ? <div className="alert alert-danger text-center">{this.state.errorResponse}</div> : ''
+                }
+                    <div className="form-group">
                     <label >Company Name</label>
                     <input type="text" className="form-control"  placeholder="Company Name" 
                           name="companyName"  noValidate onChange={this.handleChange}/>
@@ -175,17 +162,7 @@ class Register extends React.Component{
                     <p className="text-danger">* company name is required</p> : '' } 
                     {(<span className="text-danger">{formErrors.companyName}</span>)}
                    </div>
-                   <div className="form-group col-md-6">
-                    <label >Email address</label>
-                    <input type="email" className="form-control"  placeholder="Enter email" 
-                          name="email"  noValidate onChange={this.handleChange}/>
-                    {this.state.invaildError && (this.state.email === null) ? 
-                    <p className="text-danger">* email is required</p> : '' } 
-                      {formErrors.email.length > 0 && (
-                         <span className="text-danger">{formErrors.email}</span>
-              )}
-                   </div>
-                   <div className="form-group col-md-6">
+                   <div className="form-group">
                     <label >First Name</label>
                     <input type="text" className="form-control"  placeholder="First Name" 
                           name="firstName"  noValidate onChange={this.handleChange}/>
@@ -194,7 +171,7 @@ class Register extends React.Component{
                       {formErrors.firstName.length > 0 && (
                          <span className="text-danger">{formErrors.firstName}</span>)}
                    </div>
-                   <div className="form-group col-md-6">
+                   <div className="form-group">
                     <label >Last Name</label>
                     <input type="text" className="form-control"  placeholder="Last Name" 
                           name="lastName"  noValidate onChange={this.handleChange}/>
@@ -204,11 +181,20 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.lastName}</span>
               )}
                    </div>
-  
+                    <div className="form-group">
+                    <label >Email address</label>
+                    <input type="email" className="form-control"  placeholder="Enter email" 
+                          name="email"  noValidate onChange={this.handleChange}/>
+                    {this.state.invaildError && (this.state.email === null) ? 
+                    <p className="text-danger">* email is required</p> : '' } 
+                      {formErrors.email.length > 0 && (
+                         <span className="text-danger">{formErrors.email}</span>
+              )}
+                   </div>
 
 
 
-                    <div className="form-group col-md-6">
+                    <div className="form-group">
                     <label >Department</label>
                     <input type="text" className="form-control"  placeholder="Dpartment" 
                           name="department"  noValidate onChange={this.handleChange}/>
@@ -219,7 +205,7 @@ class Register extends React.Component{
               )}
                    </div>
 
-                      <div className="form-group col-md-6">
+                      <div className="form-group">
                     <label >Date Of Birth</label>
                     <input type="date" className="form-control"   
                           name="dob"  noValidate onChange={this.handleChange}/>
@@ -230,7 +216,7 @@ class Register extends React.Component{
               )}
                    </div>
 
-                  <div className="form-group col-md-6">
+                  <div className="form-group">
                     <label >Manager</label>
                     <input type="text" className="form-control" placeholder="manager"
                           name="manager"  noValidate onChange={this.handleChange}/>
@@ -240,7 +226,7 @@ class Register extends React.Component{
                          <span className="text-danger">{formErrors.manager}</span>
               )}
                    </div>
-                <div className="form-group col-md-6">
+                <div className="form-group">
                     <label >Password</label>
                     <input type="password" className="form-control"  placeholder="Password" 
                                     name="password"
@@ -252,19 +238,16 @@ class Register extends React.Component{
                 <span className="text-danger">{formErrors.password}</span>
               )}
                 </div>
-                <div className="form-group col-md-6">
+                <div className="form-group">
                     <label >Country</label>
                     <select className="form-control" id="sel1">
-                        <option>Select Country</option>
-                        {
-                          this.state.listOfCountry && this.state.listOfCountry.length ? 
-                          this.state.listOfCountry.map((item, index) => {
-                            return <option key={index}>{item.name}</option>
-                          }) : ''
-                        }
+                        <option>Nigeria</option>
+                        <option>Ghana</option>
+                        <option>Togo</option>
+                        <option>South Africa</option>
                     </select>
                     </div>
-                    <div className="form-group col-md-6">
+                    <div className="form-group">
                     <label >Time Zone</label>
                     <select className="form-control" id="seld">
                         <option>West Africa/ Lagos</option>
@@ -274,9 +257,7 @@ class Register extends React.Component{
                     </select>
                     </div>
             
-                    <div className="col-md-12 text-center">
                     <button type="submit" className="btn btn-primary">Register</button>
-                    </div>
              
                     </div>
                 </form>
