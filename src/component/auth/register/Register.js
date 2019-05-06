@@ -24,6 +24,14 @@ const emailRegex = RegExp(
     return valid;
   };
 class Register extends React.Component{
+ async componentDidMount() {
+    try {
+      const res = await axios.get('https://restcountries.eu/rest/v2/all')    
+      this.setState({listOfCountry: res.data})
+    } catch (error) {
+      console.log(error);
+    }
+  }
     constructor(props) {
         super(props);
         this.errorSate = {
@@ -41,6 +49,7 @@ class Register extends React.Component{
           password: null,
           invaildError: false,
           errorResponse: false,
+          listOfCountry: null,
           successResponse: false,
           loading: false,
           formErrors: {
@@ -246,10 +255,13 @@ class Register extends React.Component{
                 <div className="form-group col-md-6">
                     <label >Country</label>
                     <select className="form-control" id="sel1">
-                        <option>Nigeria</option>
-                        <option>Ghana</option>
-                        <option>Togo</option>
-                        <option>South Africa</option>
+                        <option>Select Country</option>
+                        {
+                          this.state.listOfCountry && this.state.listOfCountry.length ? 
+                          this.state.listOfCountry.map((item, index) => {
+                            return <option key={index}>{item.name}</option>
+                          }) : ''
+                        }
                     </select>
                     </div>
                     <div className="form-group col-md-6">

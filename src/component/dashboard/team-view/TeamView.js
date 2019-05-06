@@ -45,7 +45,7 @@ class TeamView extends Component {
             type: 'warning',
             showCloseButton: true,
         }).then((result) => {
-            if (result.va) {
+            if (result.value) {
                this.updateLeave(item._id, status)
             }
         })

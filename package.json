@@ -37,7 +37,8 @@
     "create-migration": "./node_modules/.bin/knex migrate:make --env development",
     "migrate:up": "./node_modules/.bin/knex migrate:latest --env development",
     "migrate:down": "./node_modules/.bin/knex migrate:rollback --env development",
-    "server": "node server/server.js"
+    "server": "node server/server.js",
+    "heroku-postbuild": "npm install && npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
