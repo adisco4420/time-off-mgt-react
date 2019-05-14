@@ -39,7 +39,7 @@ module.exports = function sendMail(path, email, token) {
         <p class="mt-3">${message.msg1}</p>
         <p class="mt-2">${message.msg2}</p>
         <div class="mt-3"><button class="btn btn-primary btn-md">
-            <a class="text-light" href='http://localhost:3000/${path}/${token}'>${message.btnText}</a>
+            <a class="text-light" href='${process.env.REACT_APP_TimeOffURL}/${path}/${token}'>${message.btnText}</a>
         </button></div>
     </div>
 
