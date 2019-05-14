@@ -13,6 +13,8 @@ import Login from './component/auth/login/Login';
 import Register from './component/auth/register/Register';
 import AdminRegister from './component/auth/admin/AdminRegister'
 import TeamView from './component/dashboard/team-view/TeamView';
+import Confirm from './component/auth/confirm/Confirm';
+import ResetPassword from './component/auth/reset-pasword/ResetPassword';
 class App extends Component {
   render() {
     return (
@@ -27,6 +29,8 @@ class App extends Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/admin-register" component={AdminRegister} />
+            <Route exact path="/confirm/:token" component={Confirm}/>
+            <Route exact path="/reset-password/:token" component={ResetPassword}/>
             <Route exact path="/employee-dashboard" component={EmployeeDashboard} />
             <Route exact path="/team-view" component={TeamView} />
             <Route exact path="/new-absence" component={NewAbsenceForm} />

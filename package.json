@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sendgrid/mail": "^6.3.1",
     "axios": "^0.18.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
@@ -20,6 +21,7 @@
     "mongoose": "^5.5.1",
     "mysql": "^2.16.0",
     "node-cron": "^2.0.3",
+    "pug": "^2.0.3",
     "react": "^16.8.4",
     "react-addons-css-transition-group": "^15.6.2",
     "react-calendar": "^2.18.1",

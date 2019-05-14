@@ -3,6 +3,7 @@ import './register.css'
 import Header from './../../header/Header'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -24,6 +25,18 @@ const emailRegex = RegExp(
     return valid;
   };
 class Register extends React.Component{
+  displaySuccessAlert() {
+    Swal.fire(
+      'Success',
+      'Please Verify Your Email Address',
+      'success'
+    ).then(() => {
+      this.props.history.push('/login');
+      this.props.history.push('/register');
+    })
+  }
+
+  
  async componentDidMount() {
     try {
       const res = await axios.get('https://restcountries.eu/rest/v2/all')    
@@ -64,9 +77,7 @@ class Register extends React.Component{
           }
         };
       }
-      storeToLocalstorage = (data) => {
-        localStorage.setItem('currentUserTimeOff', JSON.stringify(data))
-      }
+
     
       handleSubmit = e => {
         e.preventDefault(); 
@@ -83,11 +94,9 @@ class Register extends React.Component{
           };
           this.setState({loading: true, errorResponse: false})
           axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/register`, body).then((data) => {
-            // console.log(data.data)
-            const token = data.data.data.token
-            this.storeToLocalstorage({token:token});
             this.setState({loading: false})
-            this.props.history.push('/employee-dashboard')
+            this.displaySuccessAlert();
+            
           })
           .catch(err => {
             const errorMsg = err.response ? err.response.data.message : err.response;
