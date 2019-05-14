@@ -47,11 +47,18 @@ const EmployeeSchema = new mongoose.Schema({
     select: false
   },
   isAdmin: {
-    type: Boolean
+    type: Boolean,
+    enum: [false, true],
+    required: true,
   },
   numberOfLeave: {
     type: Number,
     required: true
+  },
+  isVerified: {
+    type: Boolean,
+    enum: [false, true],
+    required: true,
   }
 });
 

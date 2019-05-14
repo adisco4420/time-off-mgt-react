@@ -8,6 +8,7 @@ const port = process.env.PORT || 6004;
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
+
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
@@ -20,7 +21,6 @@ mongoose
 
 // Use express static
 app.use(express.static(path.join(__dirname, '../build')));
-
 
 app.use(cors());
 

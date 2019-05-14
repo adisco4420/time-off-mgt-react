@@ -180,7 +180,7 @@ class EmployeeDashboard extends Component {
                         this.state.allLeaveRequest.map((item, index) => {
                             return <div key={index} className="col-md-3">
                             <Calendar 
-                                value={new Date(item.from_date)}
+                                value={[new Date(item.from_date), new Date(item.to_date)]}
                                 />
                             </div>  
                         }) :
