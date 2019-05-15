@@ -166,7 +166,7 @@ router.post('/resend', async function (req, res) {
     }, process.env.SECRET, {
       expiresIn: '1h'
     });
-    sendMail('confirm', 'adisco4420@gmail.com', token);
+    sendMail('confirm', user.email, token);
     res.status(200).json({status: 'success', message: 'verification message has been sented'})
   } catch (error) {
     res.status(500).json({status:'error', message: 'server error'})
