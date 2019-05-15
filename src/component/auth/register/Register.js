@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
-  const onlyLetterRegex = RegExp(/^[A-Za-z]+$/)
+  const onlyLetterRegex = RegExp(/^\d*$/)
   
   const formValid = ({ formErrors, ...rest }) => {
     let valid = true;
@@ -116,17 +116,17 @@ class Register extends React.Component{
     
         switch (name) {
             case "companyName":
-            formErrors.companyName =  value.length < 3 || !onlyLetterRegex.test(value)
+            formErrors.companyName =  value.length < 3 || onlyLetterRegex.test(value)
             ? "company name must be up to 3 character (alphabet only)"
             : "";
           break;
           case "firstName":
-              formErrors.firstName =  value.length < 3 || !onlyLetterRegex.test(value)
+              formErrors.firstName =  value.length < 3 || onlyLetterRegex.test(value)
               ? "first name must be up to 3 characters (alphabet only)"
               : "";
             break;
           case "lastName":
-          formErrors.lastName =  value.length < 3 || !onlyLetterRegex.test(value)
+          formErrors.lastName =  value.length < 3 || onlyLetterRegex.test(value)
           ? "last name must be up to 3 characters (alphabet only)"
           : "";
           break;
@@ -136,7 +136,7 @@ class Register extends React.Component{
               : "invalid email address";
             break;
         case "department":
-        formErrors.department =  value.length < 3 || !onlyLetterRegex.test(value)
+        formErrors.department =  value.length < 3 || onlyLetterRegex.test(value)
           ? "department must be up to 3 characters (alphabet only)"
           : "";
         break;  
@@ -146,7 +146,7 @@ class Register extends React.Component{
         : "";
         break;
         case "manager":
-        formErrors.manager =  value.length < 3 || !onlyLetterRegex.test(value)
+        formErrors.manager =  value.length < 3 || onlyLetterRegex.test(value)
         ? "manager must be up to 3 characters (alphabet only)"
         : "";
       break;
