@@ -160,14 +160,14 @@ router.post('/resend', async function (req, res) {
   try {
     const user = await EmployeeModel.findOne({email: req.body.email})
     if (!user) return res.status(404).json({status: 'error', message: 'user not found'});
-    if (user.isVerified) return res.status(422).json({status: 'error', message: 'your are already verified'});
+    if (user.isVerified) return res.status(422).json({status: 'error', message: 'you are already verified'});
     const token = jwt.sign({
       id: user._id
     }, process.env.SECRET, {
       expiresIn: '1h'
     });
     sendMail('confirm', 'adisco4420@gmail.com', token);
-    res.status(200).json({status: 'success', message: 'confimation message has been sented'})
+    res.status(200).json({status: 'success', message: 'verification message has been sented'})
   } catch (error) {
     res.status(500).json({status:'error', message: 'server error'})
   }

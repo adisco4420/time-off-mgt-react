@@ -2,30 +2,68 @@ import React from 'react';
 import Header from './../../header/Header';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 class Confirm extends React.Component {
     state = {
         loading: true,
-        response: null
+        response: null,
+        showResend: false,
+        email: null
     }
     componentDidMount(){
-        console.log(this.props.match.params.token);
         this.confirmToken(this.props.match.params.token)
     }
+    displaySuccessAlert(status) {
+        const text = status === 200 ? 'Confirmation mail has been sented' : 'You are already verified'
+        if (status ===  200 || status === 422) {
+            Swal.fire(
+                'Success',
+                text,
+                'success'
+              ).then(() => {
+                this.props.history.push('/login');
+              }) 
+        } else  {
+            Swal.fire(
+                'Error',
+                'Email Address Not Found',
+                'error'
+              ).then(() => {
+                this.props.history.push('/register');
+              }) 
+        }
+  
+      }
    async confirmToken(token) {
         try {
             token = this.props.match.params.token
-            const res = await axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/confirm`, {token});
+            await axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/confirm`, {token});
             this.setState({loading: false, response: 200})
-            console.log(res.data);
         } catch (error) {
             console.log(error.response);
             this.setState({loading: false, response: error.response.status})
         }
     }
-   showResend = e => {
+    async resendMaill(email) {
+        try {
+           const res = await axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/resend`, {email});
+           this.displaySuccessAlert(res.status)   
+        } catch (error) {
+            console.log(error.response);
+            this.displaySuccessAlert(error.response.status)
+        }
+    }
+   showResend = (e) => {
        e.preventDefault()
-       console.log('resend');
+       this.setState({showResend: true})
+   }
+   handleEmail = e => {
+       this.setState({email: e.target.value})
+   }
+   resend = (e) => {
+    e.preventDefault()
+    this.resendMaill(this.state.email)
    }
 
     render() {
@@ -35,7 +73,10 @@ class Confirm extends React.Component {
                 <div className="jumbotron text-center bg-teal ">
                     <h1>Confirmation </h1>
                 </div>
-                <form className="container">
+                <div className="container">
+                {
+                    !this.state.showResend ?
+                
                     <div className="row">
                         <div className="col-md-12 text-center">
                             {
@@ -66,8 +107,19 @@ class Confirm extends React.Component {
                                 </React.Fragment>
                             }
                         </div>
+                    </div> :
+                <div className="row">
+                    <div className="col-md-6 offset-md-3 text-center">
+                       <form onSubmit={this.resend}>
+                       <input  onChange={this.handleEmail}  className="form-control" type="email" 
+                                    placeholder="Enter email" required email="true" />
+                       <button type="submit" className="btn btn-primary mt-2">Resend</button>
+                       </form>
                     </div>
-                </form>
+                </div>
+               
+               }
+                </div>
             </div>
         )
     }

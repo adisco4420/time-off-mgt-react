@@ -5,6 +5,7 @@ import './login.css'
 import Header from './../../header/Header'
 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -38,11 +39,33 @@ class Login extends React.Component{
           formErrors: {
             email: "",
             password: ""
-          }
+          },
+          holdEmail: ""
         };
       }
       storeToLocalstorage = (data) => {
         localStorage.setItem('currentUserTimeOff', JSON.stringify(data))
+      }
+      displaySuccessAlert() {
+        Swal.fire(
+          'Success',
+          'verification message has been sented',
+          'success'
+        ).then(() => {
+          document.querySelector('input[name=email]').value = "";
+          document.querySelector('input[name=password]').value = ""
+          this.setState({loading: false})
+        })
+      }
+      resendMail =  async ()  => {
+        this.setState({loading: true, errResponse: false })
+        try {
+          const body = {email: this.state.email}
+          await axios.post(`${process.env.REACT_APP_TimeOffURL}/employee/resend`, body)
+          this.displaySuccessAlert()
+        } catch (error) {
+          console.log(error);
+        }
       }
     
       handleSubmit = e => {
@@ -104,7 +127,11 @@ class Login extends React.Component{
                     <div className="">
                    
                     {this.state.errResponse ? <div className="alert alert-danger text-center">
-                  {this.state.errResponse}</div> : ''}
+                  {this.state.errResponse} 
+                  {this.state.errResponse.includes('verification') ?
+                  <React.Fragment>
+                     <button type="button" onClick={this.resendMail} className="ml-2 btn btn-info">Click Here To Resend</button>
+                  </React.Fragment> :''}</div> : ''}
                   {this.state.loading ? <h6 className="text-center">Loading...</h6> : ''}
                 
                     <div className="form-group">
