@@ -21,7 +21,7 @@
     "mongoose": "^5.5.1",
     "mysql": "^2.16.0",
     "node-cron": "^2.0.3",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "react": "^16.8.4",
     "react-addons-css-transition-group": "^15.6.2",
     "react-calendar": "^2.18.1",
